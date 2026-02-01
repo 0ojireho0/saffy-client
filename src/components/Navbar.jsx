@@ -54,7 +54,7 @@ export default function Navbar() {
           </button>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex gap-6 justify-center items-center">
+          <div className="hidden md:flex gap-12 lg:gap-13.5 justify-center items-center">
             {navItems.map((i) => {
               const isActive = pathName === i.path;
               return (

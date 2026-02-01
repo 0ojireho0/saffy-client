@@ -41,7 +41,7 @@ export default function Footer() {
                 EXPLORE PAGES
               </h2>
 
-              <div className="grid grid-cols-2 gap-y-2 gap-x-6">
+              <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-y-2 gap-x-6">
                 {navItems.map((i) => (
                   <Link
                     key={i.id}
