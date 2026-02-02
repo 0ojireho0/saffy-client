@@ -12,12 +12,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
@@ -41,4 +41,13 @@ body {
 
 .sailec-bold{
   font-family: sailec-bold;
+}
+
+@font-face {
+  font-family: helvetica-bold;
+  src: url("../assets/fonts/helvetica-bold.ttf");
+}
+
+.helvetica-bold{
+  font-family: helvetica-bold;
 }

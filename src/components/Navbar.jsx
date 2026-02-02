@@ -41,7 +41,7 @@ export default function Navbar() {
   return (
     <>
       {/* Top bar */}
-      <div className="w-full bg-white py-4 px-4 sticky top-0">
+      <div className="w-full bg-white py-4 px-4 sticky top-0 z-10">
         <div className="flex items-center justify-between md:justify-center">
           {/* Mobile hamburger */}
           <button
@@ -82,7 +82,7 @@ export default function Navbar() {
           <>
             {/* Overlay */}
             <motion.div
-              className="fixed inset-0 z-40 bg-black"
+              className="fixed inset-0 z-20 bg-black"
               onClick={closeMenu}
               aria-hidden="true"
               initial={{ opacity: 0 }}
