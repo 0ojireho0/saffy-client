@@ -51,3 +51,12 @@ body {
 .helvetica-bold{
   font-family: helvetica-bold;
 }
+
+@font-face {
+  font-family: sailec-regular;
+  src: url("../assets/fonts/sailec-regular.otf");
+}
+
+.sailec-regular{
+  font-family: sailec-regular;
+}
