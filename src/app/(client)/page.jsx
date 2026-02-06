@@ -15,6 +15,8 @@ import img3 from "@/assets/images/featured-products/img3.jpg"
 import img4 from "@/assets/images/featured-products/img4.jpg"
 import img5 from "@/assets/images/featured-products/img5.jpg"
 
+import founder from "@/assets/images/sister-juliaan.png"
+
 
 
 import Header from "@/components/Header"
@@ -108,7 +110,7 @@ export default function Home() {
     <>
 
     {/* Our Founder */}
-    <section className="w-full bg-linear-to-b from-[#215348] to-[#092723] py-16">
+    <section className="w-full bg-linear-to-b from-[#215348] to-[#092723] py-20">
       <div className="mx-auto w-full max-w-5xl px-6">
         <div className="flex flex-col-reverse items-center gap-10 md:flex-row md:justify-between">
           
@@ -156,10 +158,10 @@ export default function Home() {
             className="w-full md:w-1/2"
           >
             <div className="mx-auto w-full max-w-md md:ml-auto md:max-w-lg">
-              <div className="relative aspect-4/5 overflow-hidden rounded-2xl bg-white/5 shadow-lg ring-1 ring-white/10">
+              <div className="relative aspect-6/7 overflow-hidden rounded-2xl bg-white/5 shadow-lg ring-1 ring-white/10">
                 {/* Replace src with your actual founder image */}
                 <Image
-                  src={img1} // <-- change this to your asset import or path
+                  src={founder} // <-- change this to your asset import or path
                   alt="Our Founder"
                   fill
                   // sizes="(max-width: 768px) 90vw, 40vw"
