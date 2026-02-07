@@ -16,6 +16,7 @@ import img4 from "@/assets/images/featured-products/img4.jpg"
 import img5 from "@/assets/images/featured-products/img5.jpg"
 
 import founder from "@/assets/images/sister-juliaan.png"
+import philosphy from "@/assets/images/philosophy-homepage.jpg"
 
 
 
@@ -109,126 +110,82 @@ export default function Home() {
   return (
     <>
 
+
+    {/* Philosophy */}
+    <section>
+
+    </section>
+
     {/* Our Founder */}
-    <section className="w-full bg-linear-to-b from-[#215348] to-[#092723] py-20">
-      <div className="mx-auto w-full max-w-5xl px-6">
-        <div className="flex flex-col-reverse items-center gap-10 md:flex-row md:justify-between">
-          
-          {/* Text */}
-          <motion.div
-            variants={fadeLeft}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.35 }}
-            className="w-full md:w-1/2"
-          >
-            <h2 className="text-2xl tracking-widest text-[#E4E9A7] helvetica-bold">
-              OUR FOUNDER
-            </h2>
-
-            <p className="mt-5 text-sm leading-relaxed text-white md:text-base text-justify sailec-regular">
-              From the belief of Sister Juliaan Mullie, ICM, a Belgian missionary nun,
-              that one can “Fight Hunger Through Work”, the SAFFY or Social Action for
-              Filipino Youth saw the light of day in 1966. This organization created
-              alternative sources of livelihood for the unemployed and out-of-school
-              youths living in the marginalized areas of Manila.
-            </p>
-
-            <p className="mt-5 text-sm leading-relaxed text-white md:text-base text-justify sailec-regular">
-              The organization was later incorporated in 1970 as Social Action
-              Foundation for Rural and Urban Development, Inc. or SAFRUDI, a non-stock,
-              non-profit social development entity imbued with Christian values.
-            </p>
-
-            <div className="mt-8">
-              <button
-                className="rounded-full bg-[#E4E9A7] px-5 py-2 text-xs sailec-medium text-[#05251F] transition-transform hover:scale-105 md:text-sm"
-              >
-                LEARN MORE
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Image */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.35 }}
-            className="w-full md:w-1/2"
-          >
-            <div className="mx-auto w-full max-w-md md:ml-auto md:max-w-lg">
-              <div className="relative aspect-6/7 overflow-hidden rounded-2xl bg-white/5 shadow-lg ring-1 ring-white/10">
-                {/* Replace src with your actual founder image */}
-                <Image
-                  src={founder} // <-- change this to your asset import or path
-                  alt="Our Founder"
-                  fill
-                  // sizes="(max-width: 768px) 90vw, 40vw"
-                  className="object-cover"
-                  priority={false}
-                />
-              </div>
-            </div>
-          </motion.div>
-
+    <section className="w-full bg-linear-to-b from-[#215348] to-[#092723] pt-[90.5px] pb-[120.5px] px-4 lg:px-70 xl:px-95.25">
+      <div className="flex flex-col-reverse lg:flex-row lg:justify-between lg:gap-20">
+        <div className="py-[107.5] ">
+          <div className="lg:w-[580]">
+            <h1 className="text-[#E4E9A7] helvetica-bold text-[32px]">OUR FOUNDER</h1>
+            <h1 className="mt-[24] sailec-regular text-[20px] text-white  text-justify">From the belief of Sister Julian Mullie, ICM, a Belgian missionary nun, that one can "Fight Hunger Through Work", SAFFY or Social Action for Filipino Youth saw the light of day in 1966. This organization created alternative sources of livelihood for the unemployed and out-of-school youths living in the marginalized areas of Manila.</h1>
+            <h1 className="mt-[24] sailec-regular text-[20px] text-white text-justify">The organization was later incorporated in 1970 as Social Action Foundation for Rural and Urban Development, Inc. or SAFRUDI, a non-stock, non-profit social development entity imbued with Christian values</h1>
+          </div>
+          <button 
+            className="mt-[24] text-[#05251F] sailec-medium bg-[#E4E9A7] pt-[12] pb-[6] px-[20] rounded-full"
+          >LEARN MORE</button>
+        </div>
+        <div className="lg:w-[500]">
+          <Image 
+            src={founder}
+            alt="founder"
+          />
         </div>
       </div>
     </section>
 
 
     {/* Featured Products */}
-    <section className="w-full bg-[#E1F1D5] py-20">
-      <motion.div 
-        variants={container}
-        initial="hidden"
-        whileInView={"show"}
-        viewport={{ once: true, amount: 0.25 }}
-        className="mx-auto w-full max-w-7xl px-6">
-        
-        {/* Header */}
-        <div className="flex flex-col items-center text-center">
-          <Header>FEATURED PRODUCTS</Header>
-          <Subheader>Discover products that reflects our purpose</Subheader>
-        </div>
+    <section className="w-full min-h-225.25 bg-[#E1F1D5]">
+      {/* Header */}
+      <div className="pt-12 md:pt-16 lg:pt-20 text-center px-4 md:px-10 lg:px-0">
+        <h1 className="helvetica-bold text-[24px] md:text-[28px] lg:text-[32px]">
+          FEATURED PRODUCTS
+        </h1>
+        <h1 className="mt-3 sailec-regular text-[#52726E] text-[18px] md:text-[22px] lg:text-[28px]">
+          Discover products that reflects our purpose
+        </h1>
+      </div>
 
-        {/* Products */}
-        <div className="mt-14 grid grid-cols-2 gap-8 md:grid-cols-5">
-          {featuredProductsList.map((p) => (
-            <article key={p.id} className="flex flex-col">
-              
-              {/* Bigger Image Card */}
-              <div className="relative overflow-hidden rounded-3xl bg-white shadow-md">
-                <div className="relative aspect-4/5 w-full">
+      {/* Grid */}
+      <div className="mt-10 md:mt-12 lg:mt-15 flex justify-center items-center px-4 md:px-10 lg:px-34.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8 md:gap-6 lg:gap-9 relative w-full">
+          {featuredProductsList.map((item, i) => {
+            return (
+              <div key={i} className="flex flex-col items-center md:items-start">
+                {/* Image wrapper */}
+                <div className="relative w-full aspect-[3/4] overflow-hidden rounded-[20px]">
                   <Image
-                    src={p.img}
-                    alt={p.title}
+                    src={item.img}
+                    alt={item.title}
                     fill
-                    sizes="(max-width: 768px) 50vw, 20vw"
-                    className="object-contain p-2 transition-transform duration-300 hover:scale-105"
+                    className="object-cover"
+                    sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 300px"
                   />
                 </div>
+
+                <h1 className="mt-4 md:mt-5 lg:mt-6 sailec-bold text-[22px] md:text-[24px] lg:text-[28px] text-[#0B2A26] text-center md:text-left">
+                  {item.title}
+                </h1>
+                <h1 className="mt-1.5 sailec-regular text-[14px] md:text-[16px] lg:text-[18px] text-[#52726E] text-center md:text-left">
+                  {item.desc}
+                </h1>
               </div>
-
-              {/* Text */}
-              <h3 className="mt-5 text-xl sailec-bold text-[#0B2A26]">
-                {p.title}
-              </h3>
-              <p className="mt-1 text-sm sailec-regular text-[#52726E]">
-                {p.desc}
-              </p>
-            </article>
-          ))}
+            );
+          })}
         </div>
+      </div>
 
-        {/* CTA */}
-        <div className="mt-14 flex justify-center">
-          <button className="rounded-full bg-[#0B2B26] px-4 py-2 text-sm font-medium text-[#E1F1D5] transition-transform hover:scale-105">
-            VIEW MORE PRODUCTS
-          </button>
-        </div>
-
-      </motion.div>
+      {/* Button */}
+      <div className="py-15 text-center px-4">
+        <button className="text-[#E1F1D5] bg-[#0B2B26] pt-3 pb-1.5 px-5 rounded-full sailec-medium text-[16px] cursor-pointer hover:scale-110 transition-transform">
+          VIEW MORE PRODUCTS
+        </button>
+      </div>
     </section>
 
 
@@ -268,7 +225,7 @@ export default function Home() {
             <div
               className="
                 absolute inset-0 z-10
-                bg-linear-to-b from-black/10 to-[#06332B]/40
+                bg-linear-to-b from-black/10 to-[#06332B]
                 transition-opacity duration-300
                 opacity-0
                 group-hover:opacity-100
@@ -287,10 +244,10 @@ export default function Home() {
                 sailec-medium
               "
             >
-              <h3 className="whitespace-pre-line text-4xl leading-tight tracking-tight md:text-5xl">
+              <h3 className="whitespace-pre-line text-4xl leading-tight tracking-tight md:text-[88px]">
                 {item.title}
               </h3>
-              <p className="mt-2 text-sm text-white/80">{item.author}</p>
+              <p className="mt-2 text-sm text-white/80 md:text-[26px] ">{item.author}</p>
             </div>
 
             <span className="absolute inset-0 z-30 rounded-2xl ring-0 ring-white/40 transition focus-within:ring-2" />
@@ -305,7 +262,7 @@ export default function Home() {
         viewport={{ once: true, amount: 0.4 }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
       >
-        <h1 className="text-[#E1F1D5] bg-[#0B2B26] rounded-full py-2 px-4 text-sm sailec-medium cursor-pointer hover:scale-105 transition-transform">
+        <h1 className="text-[#E1F1D5] bg-[#0B2B26] pt-3 pb-1.5 px-5 rounded-full sailec-medium text-[16px] cursor-pointer hover:scale-110 transition-transform">
           MORE NEWS & STORIES
         </h1>
       </motion.div>
@@ -324,7 +281,7 @@ export default function Home() {
         viewport={{ once: true, amount: 0.35 }}
       >
         <div>
-          <Header>IN PARTNERSHIP WITH</Header>
+          <Header>OUR PARTNERS IN FAIR TRADE</Header>
         </div>
 
         <motion.div
@@ -336,7 +293,7 @@ export default function Home() {
         >
           {[wftoAsia, wfto, philexport, ccap].map((src, idx) => (
             <motion.div key={idx} variants={fadeUp}>
-              <Image src={src} height={70} width={70} alt={`partner-${idx}`} />
+              <Image src={src} height={100} width={100} alt={`partner-${idx}`} />
             </motion.div>
           ))}
         </motion.div>
