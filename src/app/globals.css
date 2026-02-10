@@ -60,3 +60,21 @@ body {
 .sailec-regular{
   font-family: sailec-regular;
 }
+
+@font-face {
+  font-family: helvetica-regular;
+  src: url("../assets/fonts/Helvetica-Regular.otf");
+}
+
+.helvetica-regular{
+  font-family: helvetica-regular;
+}
+
+@font-face {
+  font-family: AbhayaLibre-ExtraBold;
+  src: url("../assets/fonts/AbhayaLibre-ExtraBold.ttf");
+}
+
+.AbhayaLibre-ExtraBold{
+  font-family: AbhayaLibre-ExtraBold;
+}
