@@ -11,8 +11,8 @@ export default function Navbar() {
 
   const navItems = [
     { id: 1, title: "HOME", path: "/" },
-    { id: 2, title: "PRODUCTS", path: "/products" },
-    { id: 3, title: "BLOGS", path: "/blogs" },
+    { id: 2, title: "GALLERY", path: "/gallery" },
+    { id: 3, title: "STORIES", path: "/stories" },
     { id: 4, title: "SERVICE", path: "/service" },
     { id: 5, title: "ABOUT", path: "/about" },
     { id: 6, title: "CONTACT", path: "/contact" },
