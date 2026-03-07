@@ -96,8 +96,16 @@ function ProductsPopupModal({
               exit="exit"
               onClick={(e) => e.stopPropagation()}
             >
+              
               {/* Image section */}
               <div className="relative w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto md:min-h-[720px] bg-white">
+                <div className="absolute top-3 right-3 md:hidden z-10">
+                  <X
+                    size={28}
+                    className="cursor-pointer text-[#227369] bg-white/80 rounded-full p-1 hover:text-[#0B2A26]"
+                    onClick={() => setShow(false)}
+                  />
+                </div>
                 <Image
                   src={image}
                   alt={title || "product image"}
@@ -106,13 +114,14 @@ function ProductsPopupModal({
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority
                 />
+                
               </div>
 
               {/* Content section */}
               <div className="w-full md:w-1/2 p-3">
                 <div className="hidden md:flex justify-end">
                   <X
-                    size={40}
+                    size={35}
                     className="cursor-pointer text-[#227369]/80 hover:text-[#227369]"
                     onClick={() => setShow(false)}
                   />
@@ -197,16 +206,6 @@ function ProductsPopupModal({
                       57 grams
                     </h1>
                   </div>
-                </div>
-
-                <div className="mt-[22px] md:hidden">
-                  <button
-                    type="button"
-                    className="bg-[#52726E] text-white rounded-full text-center sailec-regular w-full py-2"
-                    onClick={() => setShow(false)}
-                  >
-                    Close
-                  </button>
                 </div>
               </div>
             </motion.div>

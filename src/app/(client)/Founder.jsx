@@ -2,6 +2,7 @@ import React from "react";
 import founder from "@/assets/images/sister-juliaan.png";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Founder() {
   const fadeUp = {
@@ -64,9 +65,11 @@ export default function Founder() {
                 marginalized communities while promoting Filipino craftsmanship globally.
               </p>
 
-              <button className="mt-6 text-[#05251F] sailec-medium bg-[#E4E9A7] pt-3 pb-1.5 px-5 rounded-full">
+              <Link 
+                href={"/about"}
+                className="mt-6 text-[#05251F] sailec-medium bg-[#E4E9A7] pt-3 pb-1.5 px-5 rounded-full">
                 LEARN MORE
-              </button>
+              </Link>
             </motion.div>
 
             {/* RIGHT IMAGE */}
