@@ -41,7 +41,7 @@ export default function Navbar() {
   return (
     <>
       {/* Top bar */}
-      <div className="w-full bg-white py-4 px-4 sticky top-0 z-10">
+      <div className="w-full bg-white p-4 sticky top-0 z-30">
         <div className="flex items-center justify-between md:justify-center">
           {/* Mobile hamburger */}
           <button

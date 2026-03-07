@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Image from 'next/image';
 import { motion } from "framer-motion";
 
@@ -7,9 +7,17 @@ import img2 from "@/assets/images/featured-products/img2.jpg";
 import img3 from "@/assets/images/featured-products/img3.jpg";
 import img4 from "@/assets/images/featured-products/img4.jpg";
 import img5 from "@/assets/images/featured-products/img5.jpg";
+import ProductsPopupModal from '@/components/ProductsPopupModal';
 
 
 function FeaturedProducts() {
+
+  const [showProductModal, setShowProductModal] = useState(false)
+  const [getItemDesc, setGetItemDesc] = useState({
+    img: null,
+    title: "",
+    description: "",
+  })
 
   const featuredProductsList = [
     { id: 1, title: "Capiz Nativity Decor", desc: "Handcrafted capiz nativity decor. A timeless accent for any space.", img: img1 },
@@ -45,8 +53,19 @@ function FeaturedProducts() {
     },
   };
 
+  const showProductsModal = (item) => {
+    setShowProductModal(true)
+    setGetItemDesc({
+      img: item.img,
+      title: item.title,
+      description: item.desc
+    })
+
+  }
+
 
   return (
+    <>
         <motion.section
           className="w-full min-h-225.25 bg-[#E1F1D5]"
           variants={sectionFade}
@@ -80,7 +99,9 @@ function FeaturedProducts() {
                     variants={fadeUp}
                     className="flex flex-col items-center md:items-start"
                   >
-                    <div className="relative w-full aspect-square overflow-hidden rounded-[20px] group">
+                    <div className="relative w-full aspect-square overflow-hidden rounded-[20px] group cursor-pointer"
+                      onClick={() => showProductsModal(item)}
+                    >
                       <Image
                         src={item.img}
                         alt={item.title}
@@ -116,6 +137,17 @@ function FeaturedProducts() {
             </button>
           </div>
         </motion.section>
+
+        <ProductsPopupModal 
+          setShow={setShowProductModal}
+          show={showProductModal}
+          image={getItemDesc.img}
+          title={getItemDesc.title}
+          description={getItemDesc.description}
+        />
+    
+    
+    </>
   )
 }
 
