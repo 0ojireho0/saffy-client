@@ -14,7 +14,7 @@ import coreService1 from "@/assets/images/service/core-service-1.png";
 import coreService2 from "@/assets/images/service/core-service-2.png";
 import coreService3 from "@/assets/images/service/core-service-3.png";
 
-import { ShieldCheck, Package2, Tag } from "lucide-react";
+import { ShieldCheck, PackageOpen, Tags } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -43,7 +43,7 @@ const stagger = {
   },
 };
 
-export default function ProductsShowcase() {
+export default function Service() {
   return (
     <>
       <section className="w-full">
@@ -303,7 +303,7 @@ export default function ProductsShowcase() {
           />
 
           <ContentBlock
-            icon={<Package2 className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
+            icon={<PackageOpen className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
             title="PACKAGING & SHIPPING"
             text={[
               "With over forty years of experience exporting from the Philippines, SAFFY ensures that every product is carefully packaged for safety and presentation. We offer standard packaging and can also provide customized packaging tailored to your brand, making your products arrive ready for any purpose—whether for retail, gifting, or directly to your clients.",
@@ -323,7 +323,7 @@ export default function ProductsShowcase() {
             className="order-5 md:order-5"
           />
           <ContentBlock
-            icon={<Tag className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
+            icon={<Tags className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
             title="BRANDING"
             text={[
               "We provide product tagging and labelling services for our buyers. From hang tags on your bamboo chimes to barcode stickers on wooden chopping boards, SAFFY takes care of it so your products arrive ready for display or sale.",
