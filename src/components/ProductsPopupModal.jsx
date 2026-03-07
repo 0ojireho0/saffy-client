@@ -12,6 +12,12 @@ import {
   Weight,
 } from "lucide-react";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 function ProductsPopupModal({
   show,
   setShow,
@@ -31,7 +37,7 @@ function ProductsPopupModal({
       document.body.style.overflow = "auto";
     };
   }, [show]);
-  
+
   const backdropVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -74,7 +80,7 @@ function ProductsPopupModal({
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-20 bg-black/40"
+          className="fixed inset-0 z-30 md:z-20 bg-black/40"
           variants={backdropVariants}
           initial="hidden"
           animate="show"
@@ -113,46 +119,81 @@ function ProductsPopupModal({
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <h1 className="sailec-bold text-2xl lg:text-6xl text-[#0B2A26]">
+                  <h1 className="sailec-bold text-2xl md:text-6xl text-[#0B2A26]">
                     {title}
                   </h1>
-                  <h1 className="sailec-regular text-[#52726E] lg:text-[23px] lg:w-2/3">
+                  <h1 className="sailec-regular text-[#52726E] md:text-[23px] lg:w-2/3">
                     {description}
                   </h1>
                 </div>
 
-                <div className="mt-5 lg:mt-[49.25px] flex flex-col gap-[30px]">
+                <div className="mt-5 md:mt-[49.25px] flex flex-col gap-[30px]">
                   <div className="flex gap-2 items-center">
-                    <BrickWall size={30} className="text-[#227369]" />
-                    <h1 className="lg:text-[22px] text-[#52726E] sailec-regular">
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <BrickWall size={30} className="text-[#227369]" />
+                        </TooltipTrigger>
+                        <TooltipContent side={"bottom"}>
+                            <h1 className="sailec-regular">Material</h1>
+                        </TooltipContent>
+                    </Tooltip>
+                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
                       Capiz, brass wire, brass sheet
                     </h1>
                   </div>
 
                   <div className="flex gap-2 items-center">
-                    <Palette size={30} className="text-[#227369]" />
-                    <h1 className="lg:text-[22px] text-[#52726E] sailec-regular">
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Palette size={30} className="text-[#227369]" />
+                        </TooltipTrigger>
+                        <TooltipContent side={"bottom"}>
+                            <h1 className="sailec-regular">Material</h1>
+                        </TooltipContent>
+                    </Tooltip>
+                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
                       Smoked, antique-plated
                     </h1>
                   </div>
 
                   <div className="flex gap-2 items-center">
-                    <Shapes size={30} className="text-[#227369]" />
-                    <h1 className="lg:text-[22px] text-[#52726E] sailec-regular">
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Shapes size={30} className="text-[#227369]" />
+                        </TooltipTrigger>
+                        <TooltipContent side={"bottom"}>
+                            <h1 className="sailec-regular">Material</h1>
+                        </TooltipContent>
+                    </Tooltip>
+                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
                       Nativity with 2 animals
                     </h1>
                   </div>
 
                   <div className="flex gap-2 items-center">
-                    <RulerDimensionLine size={30} className="text-[#227369]" />
-                    <h1 className="lg:text-[22px] text-[#52726E] sailec-regular">
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <RulerDimensionLine size={30} className="text-[#227369]" />
+                        </TooltipTrigger>
+                        <TooltipContent side={"bottom"}>
+                            <h1 className="sailec-regular">Material</h1>
+                        </TooltipContent>
+                    </Tooltip>
+                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
                       16 cm L x 5 cm W x 13 cm H
                     </h1>
                   </div>
 
                   <div className="flex gap-2 items-center">
-                    <Weight size={30} className="text-[#227369]" />
-                    <h1 className="lg:text-[22px] text-[#52726E] sailec-regular">
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Weight size={30} className="text-[#227369]" />
+                        </TooltipTrigger>
+                        <TooltipContent side={"bottom"}>
+                            <h1 className="sailec-regular">Material</h1>
+                        </TooltipContent>
+                    </Tooltip>
+                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
                       57 grams
                     </h1>
                   </div>
