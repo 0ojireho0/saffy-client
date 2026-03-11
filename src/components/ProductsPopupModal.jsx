@@ -118,7 +118,7 @@ function ProductsPopupModal({
               </div>
 
               {/* Content section */}
-              <div className="w-full md:w-1/2 p-3">
+              <div className="w-full md:w-1/2 p-3 max-h-86 md:max-h-full overflow-y-auto ">
                 <div className="hidden md:flex justify-end">
                   <X
                     size={35}
