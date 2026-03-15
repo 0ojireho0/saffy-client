@@ -14,10 +14,25 @@ import { Shapes } from 'lucide-react';
 import { RulerDimensionLine } from 'lucide-react';
 import { Weight } from 'lucide-react';
 
-
+import axios from "@/lib/axios";
 
 function Try() {
   const [show, setShow] = useState(true);
+
+
+  const ttry = async() => {
+
+    axios.get('/api/test')
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  }
+
+  ttry()
 
   return (
     <>
