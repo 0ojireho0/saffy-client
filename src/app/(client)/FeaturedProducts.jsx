@@ -99,24 +99,25 @@ function FeaturedProducts() {
                     variants={fadeUp}
                     className="flex flex-col items-center md:items-start"
                   >
-                    <div className="relative w-full aspect-square overflow-hidden rounded-[20px] group cursor-pointer"
-                      onClick={() => showProductsModal(item)}
-                    >
-                      <Image
-                        src={item.img}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 280px"
-                      />
+                  <div
+                    className="relative w-full aspect-[5/6] overflow-hidden rounded-[20px] group cursor-pointer"
+                    onClick={() => showProductsModal(item)}
+                  >
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 90vw, (max-width: 768px) 45vw, (max-width: 1024px) 30vw, 280px"
+                    />
 
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/48 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <span className="sailec-bold text-[#E1F1D5] text-[16px]">
-                          VIEW DETAILS
-                        </span>
-                      </div>
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/48 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <span className="sailec-bold text-[#E1F1D5] text-[16px]">
+                        VIEW DETAILS
+                      </span>
                     </div>
+                  </div>
 
                     <h1 className="mt-4 md:mt-5 lg:mt-6 sailec-bold text-[22px] md:text-[23px] text-[#0B2A26] text-center md:text-left">
                       {item.title}

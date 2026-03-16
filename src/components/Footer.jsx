@@ -20,7 +20,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#002520] text-[#F6FFEF] px-6 py-10 sm:px-10 lg:px-16 xl:px-24 2xl:px-32">
+    <footer className="bg-[#002520] text-[#F6FFEF] px-6 py-10 sm:px-10 lg:px-16 2xl:px-32">
       <div className="mx-auto max-w-full">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-[1.6fr_1fr_0.9fr_1fr] xl:gap-12">
           {/* Company Info */}

@@ -41,10 +41,10 @@ export default function Founder() {
           </motion.div>
 
           {/* IMPORTANT: items-stretch makes both columns equal height on xl */}
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,820px)_minmax(0,605px)] gap-10 xl:gap-10 items-start xl:items-stretch">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-10 xl:gap-10 items-center">
             {/* LEFT CONTENT */}
             <motion.div
-              className="text-white order-2 xl:order-1"
+              className="text-white order-2 2xl:order-1"
               variants={fadeUp}
               initial="hidden"
               whileInView="show"
@@ -93,17 +93,16 @@ export default function Founder() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.3 }}
-              className="order-1 xl:order-2 w-full"
+              className="order-1 2xl:order-2 w-full"
             >
-              {/* On xl: make the image container fill the full column height (same as left) */}
-              <div className="relative w-full h-[420px] sm:h-[520px] md:h-[620px] xl:h-full">
+              <div className="relative w-full h-[360px] sm:h-[460px] md:h-[560px] xl:h-[620px] 2xl:h-[760px]">
                 <Image
                   src={founder}
                   alt="Founder"
                   fill
                   className="object-contain"
                   priority
-                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 605px"
+                  sizes="(max-width: 1536px) 100vw, 50vw"
                 />
               </div>
             </motion.div>

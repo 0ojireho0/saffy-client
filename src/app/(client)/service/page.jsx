@@ -48,8 +48,8 @@ export default function Service() {
     <>
       <section className="w-full">
         <div className="relative overflow-hidden bg-[#0C1E1A]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(18,91,74,0.95)_0%,_rgba(12,43,37,0.95)_38%,_rgba(8,20,18,1)_100%)]" />
-          <div className="absolute inset-0 shadow-[inset_0_0_140px_rgba(0,0,0,0.45)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(44,140,116,0.65)_0%,_rgba(23,83,70,0.75)_40%,_rgba(10,32,28,0.9)_100%)]" />
+          <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(0,0,0,0.35)]" />
 
           <div className="relative mx-auto w-full max-w-[1440px]">
             {/* DESKTOP */}
@@ -294,7 +294,7 @@ export default function Service() {
             className="order-1 md:order-1"
           />
           <ContentBlock
-            icon={<ShieldCheck className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
+            icon={<ShieldCheck className="h-8 w-8 md:h-12 md:w-12 text-[#227369]" strokeWidth={1.8} />}
             title="QUALITY ASSURANCE"
             text={[
               "Every product you purchase undergoes a strict and systematic quality assurance process. Each piece is carefully checked to ensure it meets our standards for craftsmanship, accuracy to specifications, durability, and overall quality—so you can receive products that are both beautiful and reliable.",
@@ -303,7 +303,7 @@ export default function Service() {
           />
 
           <ContentBlock
-            icon={<PackageOpen className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
+            icon={<PackageOpen className="h-8 w-8 md:h-12 md:w-12 text-[#227369]" strokeWidth={1.8} />}
             title="PACKAGING & SHIPPING"
             text={[
               "With over forty years of experience exporting from the Philippines, SAFFY ensures that every product is carefully packaged for safety and presentation. We offer standard packaging and can also provide customized packaging tailored to your brand, making your products arrive ready for any purpose—whether for retail, gifting, or directly to your clients.",
@@ -323,7 +323,7 @@ export default function Service() {
             className="order-5 md:order-5"
           />
           <ContentBlock
-            icon={<Tags className="h-8 w-8 md:h-9 md:w-9 text-[#227369]" strokeWidth={1.8} />}
+            icon={<Tags className="h-8 w-8 md:h-12 md:w-12 text-[#227369]" strokeWidth={1.8} />}
             title="BRANDING"
             text={[
               "We provide product tagging and labelling services for our buyers. From hang tags on your bamboo chimes to barcode stickers on wooden chopping boards, SAFFY takes care of it so your products arrive ready for display or sale.",
@@ -409,7 +409,7 @@ function ContentBlock({ icon, title, text, className = "" }) {
 
         <div className="space-y-4 text-[14px] sm:text-[15px] md:text-[15px] lg:text-[17px] leading-[1.65] text-[#5E7773] sailec-regular">
           {text.map((paragraph, index) => (
-            <motion.p key={index} variants={fadeUp}>
+            <motion.p key={index} variants={fadeUp} className="text-justify">
               {paragraph}
             </motion.p>
           ))}
