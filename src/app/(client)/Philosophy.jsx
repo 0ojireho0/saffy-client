@@ -4,8 +4,7 @@ import philosphy from "@/assets/images/philosophy-img.jpg";
 
 export default function Philosophy() {
   return (
-    <section className="relative w-full h-[520px] sm:h-[600px] md:h-[700px] xl:h-[820px] overflow-hidden">
-      
+    <section className="relative w-full h-[420px] sm:h-[520px] md:h-[620px] lg:h-[720px] xl:h-[820px] overflow-hidden">
       {/* Background Image */}
       <Image
         src={philosphy}
@@ -20,22 +19,19 @@ export default function Philosophy() {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative h-full flex items-center justify-center px-4 sm:px-8">
-        <div className="max-w-[1400px] text-center">
-
+      <div className="relative flex h-full items-center justify-center px-4 sm:px-8">
+        <div className="w-full max-w-[1500px] text-center">
           {/* Top Label */}
-          <p className="text-[#D8E58D] helvetica-bold tracking-wide text-[14px] sm:text-[18px] md:text-[22px] xl:text-[28px] mb-4 sm:mb-6">
+          <p className="mb-4 helvetica-bold tracking-wide text-[#D8E58D] text-[13px] sm:text-[16px] md:text-[20px] lg:text-[24px] xl:text-[28px]">
             SAFRUDI PHILOSOPHY
           </p>
 
           {/* Quote Wrapper */}
-          <div className="relative">
-
+          <div className="relative mx-auto max-w-[95%] sm:max-w-[92%] lg:max-w-[88%] xl:max-w-[1500px]">
             {/* Left Quote */}
             <span
               aria-hidden="true"
-              className="absolute -left-4 sm:-left-8 md:-left-12 xl:-left-24 top-1/2 -translate-y-1/2 text-[#D8E58D] 
-              text-[60px] sm:text-[90px] md:text-[120px] xl:text-[220px] leading-none select-none AbhayaLibre-ExtraBold"
+              className="absolute left-0 top-1/2 -translate-x-[15%] -translate-y-1/2 select-none leading-none text-[#D8E58D] AbhayaLibre-ExtraBold text-[52px] sm:text-[72px] md:text-[96px] lg:text-[120px] xl:text-[180px] 2xl:text-[220px]"
             >
               “
             </span>
@@ -43,28 +39,30 @@ export default function Philosophy() {
             {/* Right Quote */}
             <span
               aria-hidden="true"
-              className="absolute -right-4 sm:-right-8 md:-right-12 xl:-right-24 top-1/2 -translate-y-1/2 text-[#D8E58D] 
-              text-[60px] sm:text-[90px] md:text-[120px] xl:text-[220px] leading-none select-none AbhayaLibre-ExtraBold"
+              className="absolute right-0 top-1/2 translate-x-[15%] -translate-y-1/2 select-none leading-none text-[#D8E58D] AbhayaLibre-ExtraBold text-[52px] sm:text-[72px] md:text-[96px] lg:text-[120px] xl:text-[180px] 2xl:text-[220px]"
             >
               ”
             </span>
 
             {/* Main Quote Text */}
-            <h1 className="
-              text-white
-              uppercase
-              helvetica-regular
-              leading-tight
-              text-[18px]
-              sm:text-[26px]
-              md:text-[34px]
-              xl:text-[56px]
-              px-6 sm:px-16
-            ">
+            <h1
+              className="
+                px-8 sm:px-14 md:px-20 lg:px-24 xl:px-28
+                text-white
+                uppercase
+                helvetica-regular
+                leading-tight
+                text-[20px]
+                sm:text-[28px]
+                md:text-[36px]
+                lg:text-[44px]
+                xl:text-[52px]
+                2xl:text-[56px]
+              "
+            >
               EVERY MAN HAS THE RIGHT TO LIFE AND THE MEANS NECESSARY AND SUITABLE
               FOR THE PROPER DEVELOPMENT OF LIFE TO ITS FULLNESS
             </h1>
-
           </div>
         </div>
       </div>

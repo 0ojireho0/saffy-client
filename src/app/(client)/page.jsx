@@ -12,6 +12,7 @@ import FeaturedProducts from "./FeaturedProducts";
 import Founder from "./Founder";
 import Philosophy from "./Philosophy";
 
+
 export default function Home() {
   const items = [
     {
@@ -118,14 +119,14 @@ export default function Home() {
 
         {/* 3 Images with hover animation */}
         <motion.section
-          className="min-h-screen"
+          className="w-full"
           variants={sectionFade}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
         >
           <motion.div
-            className="grid grid-cols-1 lg:grid-cols-3 min-h-screen"
+            className="grid grid-cols-1 xl:grid-cols-3"
             variants={container}
             initial="hidden"
             whileInView="show"
@@ -135,41 +136,46 @@ export default function Home() {
               <motion.article
                 key={item.id}
                 variants={fadeUp}
-                className="group relative isolate overflow-hidden bg-slate-950 cursor-pointer h-[60vh] sm:h-[70vh] lg:h-screen"
+                className="group relative isolate overflow-hidden bg-slate-950 cursor-pointer min-h-[420px] h-[65vh] sm:h-[60vh] lg:h-[70vh] xl:h-[85vh]"
               >
                 <Image
                   src={item.img}
                   alt={item.title.replace("\n", " ")}
                   fill
                   priority={item.id === 1}
-                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                 />
 
-                <div className="absolute inset-0 z-10 bg-linear-to-b from-black/10 to-[#06332B] transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+                <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/10 via-black/10 to-[#06332B] opacity-70 transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100" />
 
-                <div className="absolute inset-x-4 bottom-4 z-20 text-white transition-all duration-300 ease-out opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-3 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 sailec-medium">
-                  <h3 className="whitespace-pre-line text-4xl leading-tight tracking-tight md:text-[88px]">
+                <div className="absolute inset-x-4 bottom-4 z-20 text-white transition-all duration-300 ease-out sm:inset-x-6 sm:bottom-6 lg:inset-x-8 lg:bottom-8 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-3 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 sailec-medium">
+                  <h3 className="whitespace-pre-line leading-[0.95] tracking-tight text-[32px] sm:text-[42px] md:text-[52px] lg:text-[64px] xl:text-[76px] 2xl:text-[88px]">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-sm text-white/80 md:text-[26px]">{item.author}</p>
+                  <p className="mt-2 text-sm text-white/80 sm:text-base md:text-lg lg:text-[22px] xl:text-[26px]">
+                    {item.author}
+                  </p>
                 </div>
 
-                <span className="absolute inset-0 z-30 rounded-2xl ring-0 ring-white/40 transition focus-within:ring-2" />
+                <span className="absolute inset-0 z-30 ring-0 ring-white/40 transition focus-within:ring-2" />
               </motion.article>
             ))}
           </motion.div>
 
           <motion.div
-            className="py-20 flex justify-center items-center"
+            className="flex items-center justify-center px-6 py-12 sm:py-16 lg:py-20"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
           >
-            <h1 className="text-[#E1F1D5] bg-[#0B2B26] pt-3 pb-1.5 px-5 rounded-full sailec-medium text-[16px] cursor-pointer hover:scale-110 transition-transform">
+            <button
+              type="button"
+              className="rounded-full bg-[#0B2B26] px-5 py-3 text-[14px] text-[#E1F1D5] transition-transform hover:scale-105 sm:px-6 sm:text-[16px] sailec-medium"
+            >
               MORE NEWS & STORIES
-            </h1>
+            </button>
           </motion.div>
         </motion.section>
 

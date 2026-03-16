@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -16,7 +16,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 function ProductsPopupModal({
   show,
@@ -25,7 +25,6 @@ function ProductsPopupModal({
   title,
   description,
 }) {
-
   useEffect(() => {
     if (show) {
       document.body.style.overflow = "hidden";
@@ -76,135 +75,120 @@ function ProductsPopupModal({
     },
   };
 
+  const productDetails = [
+    {
+      icon: <BrickWall size={26} className="text-[#227369] sm:size-[28px]" />,
+      label: "Material",
+      value: "Capiz, brass wire, brass sheet",
+    },
+    {
+      icon: <Palette size={26} className="text-[#227369] sm:size-[28px]" />,
+      label: "Finish",
+      value: "Smoked, antique-plated",
+    },
+    {
+      icon: <Shapes size={26} className="text-[#227369] sm:size-[28px]" />,
+      label: "Style",
+      value: "Nativity with 2 animals",
+    },
+    {
+      icon: <RulerDimensionLine size={26} className="text-[#227369] sm:size-[28px]" />,
+      label: "Dimensions",
+      value: "16 cm L x 5 cm W x 13 cm H",
+    },
+    {
+      icon: <Weight size={26} className="text-[#227369] sm:size-[28px]" />,
+      label: "Weight",
+      value: "57 grams",
+    },
+  ];
+
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-30 md:z-20 bg-black/40"
+          className="fixed inset-0 z-50 bg-black/50"
           variants={backdropVariants}
           initial="hidden"
           animate="show"
           exit="exit"
           onClick={() => setShow(false)}
         >
-          <div className="flex justify-center items-center min-h-screen px-4 py-6">
+          <div className="flex min-h-screen items-center justify-center px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
             <motion.div
-              className="bg-[#EEF6E8] w-full max-w-[1200px] flex flex-col md:flex-row md:justify-between rounded-[16.2px] gap-2 lg:gap-[49px] overflow-hidden"
+              className="relative w-full max-w-6xl overflow-hidden rounded-[18px] bg-[#EEF6E8] shadow-xl lg:max-h-[90vh]"
               variants={modalVariants}
               initial="hidden"
               animate="show"
               exit="exit"
               onClick={(e) => e.stopPropagation()}
             >
-              
-              {/* Image section */}
-              <div className="relative w-full md:w-1/2 h-[260px] sm:h-[320px] md:h-auto md:min-h-[720px] bg-white">
-                <div className="absolute top-3 right-3 md:hidden z-10">
-                  <X
-                    size={28}
-                    className="cursor-pointer text-[#227369] bg-white/80 rounded-full p-1 hover:text-[#0B2A26]"
-                    onClick={() => setShow(false)}
-                  />
-                </div>
-                <Image
-                  src={image}
-                  alt={title || "product image"}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-                
-              </div>
+              <div className="flex flex-col lg:grid lg:grid-cols-2">
+                {/* Mobile close */}
+                <button
+                  type="button"
+                  className="absolute right-3 top-3 z-20 rounded-full bg-white/85 p-1 text-[#227369] transition hover:text-[#0B2A26] lg:hidden"
+                  onClick={() => setShow(false)}
+                >
+                  <X size={28} />
+                </button>
 
-              {/* Content section */}
-              <div className="w-full md:w-1/2 p-3 max-h-86 md:max-h-full overflow-y-auto ">
-                <div className="hidden md:flex justify-end">
-                  <X
-                    size={35}
-                    className="cursor-pointer text-[#227369]/80 hover:text-[#227369]"
-                    onClick={() => setShow(false)}
+                {/* Image section */}
+                <div className="relative h-[260px] w-full bg-white sm:h-[340px] md:h-[420px] lg:h-full lg:min-h-[620px]">
+                  <Image
+                    src={image}
+                    alt={title || "product image"}
+                    fill
+                    className="object-contain p-4 sm:p-6 lg:p-8"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <h1 className="sailec-bold text-2xl md:text-6xl text-[#0B2A26]">
-                    {title}
-                  </h1>
-                  <h1 className="sailec-regular text-[#52726E] md:text-[23px] lg:w-2/3">
-                    {description}
-                  </h1>
-                </div>
-
-                <div className="mt-5 md:mt-[49.25px] flex flex-col gap-[30px]">
-                  <div className="flex gap-2 items-center">
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <BrickWall size={30} className="text-[#227369]" />
-                        </TooltipTrigger>
-                        <TooltipContent side={"bottom"}>
-                            <h1 className="sailec-regular">Material</h1>
-                        </TooltipContent>
-                    </Tooltip>
-                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
-                      Capiz, brass wire, brass sheet
-                    </h1>
+                {/* Content section */}
+                <div className="flex flex-col p-4 sm:p-6 lg:max-h-[90vh] lg:overflow-y-auto lg:p-8 xl:p-10">
+                  <div className="hidden lg:flex justify-end">
+                    <button
+                      type="button"
+                      className="text-[#227369]/80 transition hover:text-[#227369]"
+                      onClick={() => setShow(false)}
+                    >
+                      <X size={34} />
+                    </button>
                   </div>
 
-                  <div className="flex gap-2 items-center">
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <Palette size={30} className="text-[#227369]" />
-                        </TooltipTrigger>
-                        <TooltipContent side={"bottom"}>
-                            <h1 className="sailec-regular">Material</h1>
-                        </TooltipContent>
-                    </Tooltip>
-                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
-                      Smoked, antique-plated
+                  <div className="flex flex-col gap-3">
+                    <h1 className="sailec-bold text-[28px] leading-tight text-[#0B2A26] sm:text-[36px] md:text-[44px] xl:text-[56px]">
+                      {title}
                     </h1>
+                    <p className="sailec-regular text-[15px] leading-relaxed text-[#52726E] sm:text-[17px] lg:max-w-[90%] xl:text-[22px]">
+                      {description}
+                    </p>
                   </div>
 
-                  <div className="flex gap-2 items-center">
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <Shapes size={30} className="text-[#227369]" />
-                        </TooltipTrigger>
-                        <TooltipContent side={"bottom"}>
-                            <h1 className="sailec-regular">Material</h1>
-                        </TooltipContent>
-                    </Tooltip>
-                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
-                      Nativity with 2 animals
-                    </h1>
-                  </div>
+                  <div className="mt-6 flex flex-col gap-5 sm:mt-8 sm:gap-6 lg:mt-10">
+                    {productDetails.map((detail) => (
+                      <div key={detail.label} className="flex items-start gap-3">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              className="mt-0.5 shrink-0"
+                              aria-label={detail.label}
+                            >
+                              {detail.icon}
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom">
+                            <p className="sailec-regular">{detail.label}</p>
+                          </TooltipContent>
+                        </Tooltip>
 
-                  <div className="flex gap-2 items-center">
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <RulerDimensionLine size={30} className="text-[#227369]" />
-                        </TooltipTrigger>
-                        <TooltipContent side={"bottom"}>
-                            <h1 className="sailec-regular">Material</h1>
-                        </TooltipContent>
-                    </Tooltip>
-                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
-                      16 cm L x 5 cm W x 13 cm H
-                    </h1>
-                  </div>
-
-                  <div className="flex gap-2 items-center">
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <Weight size={30} className="text-[#227369]" />
-                        </TooltipTrigger>
-                        <TooltipContent side={"bottom"}>
-                            <h1 className="sailec-regular">Material</h1>
-                        </TooltipContent>
-                    </Tooltip>
-                    <h1 className="md:text-[22px] text-[#52726E] sailec-regular">
-                      57 grams
-                    </h1>
+                        <p className="sailec-regular text-[15px] leading-relaxed text-[#52726E] sm:text-[16px] lg:text-[20px] xl:text-[22px]">
+                          {detail.value}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

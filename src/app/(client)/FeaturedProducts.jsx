@@ -112,7 +112,7 @@ function FeaturedProducts() {
 
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/48 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <span className="sailec-bold text-[#E1F1D5] text-[16px] md:text-[28px]">
+                        <span className="sailec-bold text-[#E1F1D5] text-[16px]">
                           VIEW DETAILS
                         </span>
                       </div>

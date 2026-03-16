@@ -3,51 +3,94 @@ import React from "react";
 import Link from "next/link";
 
 export default function Footer() {
-  const explorePages = {
-    column1: ["HOME", "PRODUCTS", "BLOGS"],
-    column2: ["SERVICE", "ABOUT", "CONTACT"],
-  };
+  const explorePages = [
+    { label: "HOME", href: "/" },
+    { label: "PRODUCTS", href: "/products" },
+    { label: "BLOGS", href: "/blogs" },
+    { label: "SERVICE", href: "/service" },
+    { label: "ABOUT", href: "/about" },
+    { label: "CONTACT", href: "/contact" },
+  ];
 
-  const socials = {
-    column1: ["FACEBOOK", "INSTAGRAM"],
-    column2: ["SHOPEE", "LAZADA"],
-  };
-
-  const hrefForPage = (page) => (page === "HOME" ? "/" : `/${page.toLowerCase()}`);
+  const socials = [
+    { label: "FACEBOOK", href: "#" },
+    { label: "INSTAGRAM", href: "#" },
+    { label: "SHOPEE", href: "#" },
+    { label: "LAZADA", href: "#" },
+  ];
 
   return (
-    <footer className="p-4 lg:pt-15 xl:px-20 2xl:pl-31.25 2xl:pr-44.5 lg:pb-15 lg:flex lg:flex-col xl:flex-row lg:justify-between xl:gap-84.25 bg-[#002520]">
-      <div className="lg:w-lg ">
-        <h1 className="sailec-bold text-lg lg:text-[46px] text-[#F6FFEF]">SAFFY INC</h1>
-        <h1 className="sailec-medium text-[#F6FFEF] text-sm lg:text-[20px]">2514 Lamayan, Santa Ana,</h1>
-        <h1 className="sailec-medium text-[#F6FFEF] text-sm lg:text-[20px]">Manila, 1009 Metro Manila</h1>
-      </div>
-      
-      <div className="text-[#F6FFEF] mt-5 flex flex-col gap-10 lg:flex-row lg:gap-16 xl:gap-32.5 w-full xl:mt-0">
-        <div className="border-t lg:border-t-0 w-full">
-          <h1 className="sailec-bold xl:text-[20px]">EXPLORE PAGES</h1>
-          <div className="mt-2 lg:mt-4.5 grid grid-cols-2 gap-2 xl:gap-x-14.5">
-              <a href="#" className="sailec-medium xl:text-[18px]">HOME</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">SERVICE</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">PRODUCTS</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">ABOUT</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">BLOGS</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">CONTACT</a>
+    <footer className="bg-[#002520] text-[#F6FFEF] px-6 py-10 sm:px-10 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="mx-auto max-w-full">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-[1.6fr_1fr_0.9fr_1fr] xl:gap-12">
+          {/* Company Info */}
+          <div className="min-w-0">
+            <h1 className="sailec-bold text-[36px] leading-none sm:text-[48px] xl:text-[56px]">
+              SAFFY INC
+            </h1>
+
+            <div className="mt-4 space-y-1">
+              <p className="sailec-medium text-[20px] leading-[1.35] sm:text-[22px] xl:text-[20px]">
+                2594 Lamayan, Santa Ana,
+              </p>
+              <p className="sailec-medium text-[20px] leading-[1.35] sm:text-[22px] xl:text-[20px]">
+                Manila, 1009 Metro Manila
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="border-t lg:border-t-0 w-full">
-          <h1 className="sailec-bold xl:text-[20px]">SOCIALS</h1>
-          <div className="mt-2 lg:mt-4.5 grid grid-cols-2 gap-2 xl:gap-x-14.5">
-              <a href="#" className="sailec-medium xl:text-[18px]">FACEBOOK</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">SHOPEE</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">INSTAGRAM</a>
-              <a href="#" className="sailec-medium xl:text-[18px]">LAZADA</a>
+
+          {/* Explore Pages */}
+          <div className="min-w-0">
+            <h2 className="sailec-bold text-[20px] sm:text-[22px] xl:text-[20px]">
+              EXPLORE PAGES
+            </h2>
+
+            <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2">
+              {explorePages.map((page) => (
+                <Link
+                  key={page.label}
+                  href={page.href}
+                  className="sailec-medium text-[18px] leading-[1.4] hover:opacity-80 transition-opacity"
+                >
+                  {page.label}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="border-t lg:border-t-0 w-full">
-          <h1 className="sailec-bold xl:text-[20px]">EMAIL</h1>
-          <div className="mt-2 lg:mt-4.5 grid grid-cols-2 gap-2 xl:gap-x-14.5">
-              <a href="mailto:marketing@saffyinc.com" className="sailec-medium xl:text-[18px]">marketing@saffyinc.com</a>
+
+          {/* Socials */}
+          <div className="min-w-0">
+            <h2 className="sailec-bold text-[20px] sm:text-[22px] xl:text-[20px]">
+              SOCIALS
+            </h2>
+
+            <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2">
+              {socials.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  className="sailec-medium text-[18px] leading-[1.4] hover:opacity-80 transition-opacity"
+                >
+                  {social.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className="min-w-0">
+            <h2 className="sailec-bold text-[20px] sm:text-[22px] xl:text-[20px]">
+              EMAIL
+            </h2>
+
+            <div className="mt-4">
+              <a
+                href="mailto:marketing@saffyinc.com"
+                className="sailec-medium text-[18px] leading-[1.4] break-all hover:opacity-80 transition-opacity"
+              >
+                marketing@saffyinc.com
+              </a>
+            </div>
           </div>
         </div>
       </div>

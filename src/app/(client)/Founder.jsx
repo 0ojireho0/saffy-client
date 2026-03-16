@@ -16,14 +16,12 @@ export default function Founder() {
 
   return (
     <section className="bg-gradient-to-b from-[#215348] to-[#092723]">
-      {/* Outer spacing */}
       <div className="px-4 sm:px-6 lg:px-12 xl:px-[150px] 2xl:px-[217.5px]">
         <div className="mx-auto w-full max-w-[1485px] pt-14 sm:pt-16 md:pt-20 xl:pt-[90.5px] pb-16 sm:pb-20 xl:pb-[120.5px]">
-          {/* IMPORTANT: items-stretch makes both columns equal height on xl */}
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,820px)_minmax(0,605px)] gap-10 xl:gap-10 items-start xl:items-stretch">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-10 xl:gap-10 items-center">
             {/* LEFT CONTENT */}
             <motion.div
-              className="text-white order-2 xl:order-1"
+              className="text-white order-2 2xl:order-1"
               variants={fadeUp}
               initial="hidden"
               whileInView="show"
@@ -65,9 +63,10 @@ export default function Founder() {
                 marginalized communities while promoting Filipino craftsmanship globally.
               </p>
 
-              <Link 
+              <Link
                 href={"/about"}
-                className="mt-6 text-[#05251F] sailec-medium bg-[#E4E9A7] pt-3 pb-1.5 px-5 rounded-full">
+                className="mt-6 inline-block text-[#05251F] sailec-medium bg-[#E4E9A7] pt-3 pb-1.5 px-5 rounded-full"
+              >
                 LEARN MORE
               </Link>
             </motion.div>
@@ -78,17 +77,16 @@ export default function Founder() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: 0.3 }}
-              className="order-1 xl:order-2 w-full"
+              className="order-1 2xl:order-2 w-full"
             >
-              {/* On xl: make the image container fill the full column height (same as left) */}
-              <div className="relative w-full h-[420px] sm:h-[520px] md:h-[620px] xl:h-full">
+              <div className="relative w-full h-[360px] sm:h-[460px] md:h-[560px] xl:h-[620px] 2xl:h-[760px]">
                 <Image
                   src={founder}
                   alt="Founder"
                   fill
                   className="object-contain"
                   priority
-                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 605px"
+                  sizes="(max-width: 1536px) 100vw, 50vw"
                 />
               </div>
             </motion.div>
