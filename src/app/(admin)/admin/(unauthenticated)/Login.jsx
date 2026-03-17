@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -14,7 +14,20 @@ import lowerright from "@/assets/images/admin/lowerright.png"
 import { useForm } from 'react-hook-form'
 import { User, Lock, ChevronLeft } from 'lucide-react';
 
+
+import { useAuth } from '@/hooks/auth'
+
 function Login() {
+
+
+  const [error, setError] = useState([])
+
+  const { login } = useAuth({
+    middleware: "guest",
+    redirectIfAuthenticated: "/admin/stories"
+  })
+
+
   const {
     register,
     handleSubmit,
@@ -27,7 +40,14 @@ function Login() {
   })
 
   const loginSubmit = (data) => {
-    console.log(data)
+    
+    login({
+      ...data,
+      setErrors: setError,
+
+    })
+
+
   }
 
   return (
@@ -168,6 +188,8 @@ function Login() {
                   </p>
                 )}
               </div>
+              
+              <h1 className='sailec-regular text-red-700 text-sm'>{error?.username}</h1>
 
               <div className='mt-[20px] sm:mt-[22px] md:mt-[24px]'>
                 <button
