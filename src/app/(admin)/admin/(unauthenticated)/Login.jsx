@@ -21,6 +21,7 @@ function Login() {
 
 
   const [error, setError] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const { login } = useAuth({
     middleware: "guest",
@@ -41,9 +42,11 @@ function Login() {
 
   const loginSubmit = (data) => {
     
+    setLoading(true)
     login({
       ...data,
       setErrors: setError,
+      setLoading
 
     })
 
@@ -194,9 +197,10 @@ function Login() {
               <div className='mt-[20px] sm:mt-[22px] md:mt-[24px]'>
                 <button
                   type='submit'
+                  disabled={loading}
                   className='bg-[#E4E9A7] sailec-medium pt-[10px] pb-[6px] px-[20px] sm:px-[22px] rounded-full cursor-pointer text-[14px] sm:text-[15px]'
                 >
-                  LOGIN
+                  {loading ? "Loading..." : "LOGIN"}
                 </button>
               </div>
             </form>
