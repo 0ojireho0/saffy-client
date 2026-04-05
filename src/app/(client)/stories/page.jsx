@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 import useStories from '@/hooks/Client/useStories';
 import { isProd } from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,7 +30,54 @@ const itemVariants = {
   },
 };
 
-function NewsStoryCard({ item }) {
+export default function ClientStories() {
+  const { story, isLoading } = useStories();
+
+  const router = useRouter()
+
+  const handleShowStory = (data) => {
+    router.push(`/stories/${data.id}`)
+  }
+
+  return (
+    <section className="min-h-screen bg-white px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="mx-auto max-w-[1080px]">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="mb-10 text-center sm:mb-14"
+        >
+          <h2 className="text-[28px] text-[#0B2A26] sm:text-[36px] helvetica-bold">
+            NEWS & STORIES
+          </h2>
+        </motion.div>
+
+        {isLoading ? (
+          <div className="mt-8 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <StorySkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="mt-8 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {story?.map((item) => (
+              <NewsStoryCard key={item.id} item={item} handleShowStory={handleShowStory} />
+            ))}
+          </motion.div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+
+function NewsStoryCard({ item, handleShowStory }) {
   const [imageLoading, setImageLoading] = useState(true);
 
   return (
@@ -39,7 +87,9 @@ function NewsStoryCard({ item }) {
       transition={{ duration: 0.25 }}
       className="group relative w-full max-w-[400px] cursor-pointer"
     >
-      <div className="flex h-[440px] flex-col overflow-hidden rounded-[10px] border border-[#D7E4DF] bg-white shadow-sm transition-all duration-300">
+      <div className="flex h-[440px] flex-col overflow-hidden rounded-[10px] border border-[#D7E4DF] bg-white shadow-sm transition-all duration-300"
+        onClick={() => handleShowStory(item)}
+      >
         <div className="relative h-[45%] w-full overflow-hidden bg-[#E9F0EC]">
           {imageLoading && (
             <div className="absolute inset-0 z-10 animate-pulse bg-[#E9F0EC]" />
@@ -92,45 +142,5 @@ function StorySkeleton() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function ClientStories() {
-  const { story, isLoading } = useStories();
-
-  return (
-    <section className="min-h-screen bg-white px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-      <div className="mx-auto max-w-[1080px]">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="mb-10 text-center sm:mb-14"
-        >
-          <h2 className="text-[28px] text-[#0B2A26] sm:text-[36px] helvetica-bold">
-            NEWS & STORIES
-          </h2>
-        </motion.div>
-
-        {isLoading ? (
-          <div className="mt-8 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <StorySkeleton key={index} />
-            ))}
-          </div>
-        ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="mt-8 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {story?.map((item) => (
-              <NewsStoryCard key={item.id} item={item} />
-            ))}
-          </motion.div>
-        )}
-      </div>
-    </section>
   );
 }

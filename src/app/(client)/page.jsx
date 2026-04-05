@@ -12,6 +12,10 @@ import FeaturedProducts from "./FeaturedProducts";
 import Founder from "./Founder";
 import Philosophy from "./Philosophy";
 
+import img1Hover from "@/assets/images/img1_hover.jpg"
+import img2Hover from "@/assets/images/img2_hover.jpg"
+import img3Hover from "@/assets/images/about/how-we-make-difference.png"
+
 
 export default function Home() {
   const items = [
@@ -19,19 +23,19 @@ export default function Home() {
       id: 1,
       title: "Stories from\nthe Studio",
       author: "Jane Doe",
-      img: "https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?auto=format&fit=crop&w=1400&q=80",
+      img: img1Hover,
     },
     {
       id: 2,
       title: "Handmade Ceramics",
       author: "Studio Notes",
-      img: "https://images.unsplash.com/photo-1526318472351-c75fcf070305?auto=format&fit=crop&w=1400&q=80",
+      img: img2Hover,
     },
     {
       id: 3,
       title: "Woven Baskets",
       author: "Craft Archive",
-      img: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1400&q=80",
+      img: img3Hover,
     },
   ];
 

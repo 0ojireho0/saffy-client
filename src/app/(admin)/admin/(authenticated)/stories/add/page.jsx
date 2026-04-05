@@ -106,7 +106,7 @@ export default function AddNewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f8f5] text-[#0f3b36]">
+    <div className="min-h-screen bg-white text-[#0f3b36]">
       <motion.div
         className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10"
         initial="hidden"
@@ -358,7 +358,7 @@ export default function AddNewPage() {
               whileFocus={{ scale: 1.01 }}
               placeholder="Content"
               {...register('content', { required: 'Content is required' })}
-              className="min-h-[220px] w-full resize-none rounded-2xl border border-[#edf1eb] bg-[#F1F1F1] px-6 py-8 text-center text-2xl text-[#0f3b36] placeholder:text-[#c7c9c6] outline-none transition focus:border-[#b8c8b9] sm:min-h-[260px] sm:text-2xl sailec-regular"
+              className="min-h-[220px] w-full resize-none rounded-2xl border border-[#edf1eb] bg-[#F1F1F1] px-6 py-8 text-left placeholder:text-center text-2xl text-[#0f3b36] placeholder:text-[#c7c9c6] outline-none transition focus:border-[#b8c8b9] sm:min-h-[260px] sm:text-2xl sailec-regular"
             />
             {errors.content && (
               <p className="mt-2 text-sm text-red-500 sailec-regular">{errors.content.message}</p>

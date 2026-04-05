@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X, CircleUserRound } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import UserSetting from "./UserSetting";
 
 export default function Navbar() {
   const [showNavItems, setShowNavItems] = useState(false);
+  const [showUserSettingModal, setShowUserSettingModal] = useState(false)
   const pathName = usePathname();
 
   const navItems = [
@@ -68,13 +70,12 @@ export default function Navbar() {
           </div>
 
           {/* Settings */}
-          <Link
-            href="/admin/settings"
-            className="absolute right-4 top-1/2 -translate-y-1/2"
-            aria-label="Settings"
+          <h1
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+            onClick={() => setShowUserSettingModal(!showUserSettingModal)}
           >
-            <Settings className="text-[#2C7A73]" />
-          </Link>
+            <CircleUserRound className="text-[#2C7A73]" />
+          </h1>
 
           {/* Spacer to keep desktop centered */}
           <div className="md:hidden w-6" />
@@ -150,6 +151,12 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      {showUserSettingModal && (
+        <UserSetting 
+          setShowUserSettingModal={setShowUserSettingModal}
+        />
+      )}
     </>
   );
 }

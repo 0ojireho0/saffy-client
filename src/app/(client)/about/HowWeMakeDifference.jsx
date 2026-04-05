@@ -80,7 +80,7 @@ export default function DifferenceSection() {
             </motion.h2>
 
             <motion.div
-              className="space-y-6 text-[20px] leading-[1.6] text-[#52726E] sailec-regular text-justify"
+              className="space-y-6 sailec-regular max-w-[700px] text-[16px] leading-[1.6] text-[#52726E] sm:text-[18px] md:text-[20px] xl:text-[20px] sailec-regular text-justify" 
               variants={stagger}
               initial="hidden"
               whileInView="show"
@@ -117,10 +117,14 @@ export default function DifferenceSection() {
             variants={fadeRight}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.3 }}
           >
             <div className="relative w-full overflow-hidden rounded-[12px]">
-              <div className="relative aspect-[4/3] sm:aspect-[16/10] md:aspect-[16/10] xl:aspect-[1.35/1] w-full">
+              <motion.div 
+                className="relative aspect-[4/3] sm:aspect-[16/10] md:aspect-[16/10] xl:aspect-[1.35/1] w-full"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
                 <Image
                   src={differenceImage}
                   alt="How we make a difference"
@@ -129,7 +133,7 @@ export default function DifferenceSection() {
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 55vw"
                 />
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>

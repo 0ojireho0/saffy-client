@@ -1,10 +1,11 @@
 'use client'
-
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+
+
 import { Plus, Trash2, Pencil, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react'
-
 import img from '@/assets/images/about/how-we-make-difference.png'
 import { useAuth } from '@/hooks/auth'
 
@@ -93,6 +94,8 @@ export default function AdminStories() {
 
   const [showEditToggle, setShowEditToggle] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+
+  const router = useRouter()
   
 
   
@@ -127,6 +130,18 @@ export default function AdminStories() {
     setSelectedStoryId(null)
   }
 
+  const handleEditStory = (row) => {
+    router.push(`/admin/stories/edit/${row.id}`)
+  }
+
+  const handleShowStory = (row) => {
+    // console.log("show", row)
+    router.push(`/admin/stories/${row.id}`)
+
+
+
+  }
+
   useEffect(() => {
 
     if(showEditToggle){
@@ -144,6 +159,8 @@ export default function AdminStories() {
 
 
   }, [showDeleteToggle])
+
+
 
   return (
     <>
@@ -234,6 +251,8 @@ export default function AdminStories() {
                       showDeleteToggle={showDeleteToggle}
                       showEditToggle={showEditToggle}
                       onDelete={handleDeleteStory}
+                      onEdit={handleEditStory}
+                      handleShowStory={handleShowStory}
                     />
                   ))
                 ) : (
@@ -263,7 +282,7 @@ export default function AdminStories() {
 }
 
 
-function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle }) {
+function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle, onEdit, handleShowStory }) {
   const [imageLoading, setImageLoading] = useState(true)
 
   return (
@@ -299,13 +318,17 @@ function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle }) {
             type="button"
             className="absolute -right-3 -top-3 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[#2C7A73] text-[#DDF0E1] shadow-md"
             aria-label={`Edit ${item.title}`}
+            onClick={() => onEdit(item)}
           >
             <Pencil size={16} />
           </motion.button>
         ) : null}
       </AnimatePresence>
 
-      <div className="h-[440px] overflow-hidden rounded-[10px] border border-[#D7E4DF] bg-white shadow-sm cursor-pointer">
+      <div 
+        className="h-[440px] overflow-hidden rounded-[10px] border border-[#D7E4DF] bg-white shadow-sm cursor-pointer"
+        onClick={() => handleShowStory(item)}
+      >
         <div className="relative h-[45%] w-full overflow-hidden bg-[#E9F0EC]">
           {imageLoading && (
             <div className="absolute inset-0 z-10 animate-pulse bg-[#E9F0EC]" />
