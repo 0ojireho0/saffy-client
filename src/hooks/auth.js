@@ -38,7 +38,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const login = async ({ setErrors, setLoading, ...props }) => {
         await csrf()
-        await axios.get('/session-test');
 
         setErrors([])
         // setStatus(null)
