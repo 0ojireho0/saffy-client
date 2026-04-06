@@ -15,6 +15,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
+import { useAuth } from '@/hooks/auth';
+
 import useStories from '@/hooks/Admin/useStories';
 
 const fadeUp = {
@@ -60,6 +62,10 @@ export default function AddNewPage() {
       image: null,
     },
   });
+
+  const { user } = useAuth({
+    middleware: "auth"
+  })
 
   const { AddStory } = useStories()
 

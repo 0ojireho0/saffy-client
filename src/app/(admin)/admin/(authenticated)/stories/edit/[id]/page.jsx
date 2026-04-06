@@ -25,6 +25,8 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { isProd } from '@/lib/axios'
 
+import { useAuth } from '@/hooks/auth';
+
 export default function EditStory() {
   const params = useParams()
   const { id } = params
@@ -37,6 +39,10 @@ export default function EditStory() {
   const [loadingBtn, setLoadingBtn] = useState(false)
 
   const { validateStory, UpdateStory } = useStories()
+
+  const { user } = useAuth({
+    middleware: "auth"
+  })
 
   const {
     reset,
