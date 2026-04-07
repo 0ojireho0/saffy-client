@@ -8,7 +8,19 @@ const axios = Axios.create({
         'X-Requested-With' : 'XMLHttpRequest'
     },
     withCredentials: true,
-    withXSRFToken: true
+    // Configure CSRF token extraction and sending
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN'
 })
+
+// Add request interceptor to handle CSRF token properly
+axios.interceptors.request.use(
+    config => {
+        // Ensure credentials are sent with every request
+        config.withCredentials = true
+        return config
+    },
+    error => Promise.reject(error)
+)
 
 export default axios
