@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function UserSetting({ setShowUserSettingModal }) {
   const [logoutLoading, setLogoutLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
-  const { logout } = useAuth();
+  const { logout, updateUser } = useAuth();
 
   const {
     register,
@@ -48,7 +49,12 @@ export default function UserSetting({ setShowUserSettingModal }) {
       return;
     }
 
-    console.log(data);
+    setUpdateLoading(true);
+    updateUser({
+      setLoading: setUpdateLoading,
+      setShowUserSettingModal,
+      ...data
+    })
   };
 
   return (
@@ -164,9 +170,10 @@ export default function UserSetting({ setShowUserSettingModal }) {
               {/* Update button */}
               <button
                 type="submit"
+                disabled={updateLoading}
                 className="mt-4 w-full rounded-full bg-[#227369] px-6 py-3 text-lg font-semibold uppercase tracking-wide text-white transition hover:bg-[#24665f] sailec-medium"
               >
-                Update Password
+                {updateLoading ? "Updating..." : "Update Account"}
               </button>
 
               {/* Logout button */}

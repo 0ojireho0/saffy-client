@@ -161,7 +161,7 @@ export default function EditStory() {
         if (data.image instanceof File) {
             formData.append('image', data.image)
         }
-
+        setLoadingBtn(true)
         await UpdateStory({
             formData,
             setLoadingBtn,

@@ -137,7 +137,7 @@ export default function useStories() {
         await csrf()
 
         try {
-            setLoadingBtn(true)
+            
 
             const response = await axios.post(
                 `/api/admin/stories/${id}`,
@@ -157,6 +157,7 @@ export default function useStories() {
                     allowOutsideClick: false
                 }).then((res) => {
                     if(res.isConfirmed){
+                        mutate()
                         router.push("/admin/stories")
                     }
                 })

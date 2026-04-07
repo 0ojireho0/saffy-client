@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
@@ -102,6 +103,31 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         window.location.pathname = '/admin'
     }
 
+    const updateUser = async ({setLoading, setShowUserSettingModal, ...props}) => {
+        await csrf()
+        axios.put('/api/admin/update-user', props)
+            .then((res) => {
+                if (res.status === 204) {
+                    mutate()
+                    Swal.fire({
+                        title: "Success",
+                        text: res.data.message,
+                        icon: "success"
+                    }).then((res) => { 
+                        if (res.isConfirmed) {
+                            setShowUserSettingModal(false)
+                        }   
+                    })
+                }
+            })
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+            })
+            .then(() => {
+                setLoading(false)
+            })
+    }
+
     useEffect(() => {
         if (middleware === 'guest' && redirectIfAuthenticated && user)
             router.push(redirectIfAuthenticated)
@@ -125,5 +151,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         resetPassword,
         resendEmailVerification,
         logout,
+        updateUser
     }
 }
