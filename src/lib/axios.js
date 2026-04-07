@@ -3,7 +3,7 @@ import Axios from "axios";
 export const isProd = process.env.NODE_ENV === 'production'
 
 const axios = Axios.create({
-    baseURL: isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API,
+    baseURL: isProd ? '/backend-api' : process.env.NEXT_PUBLIC_BACKEND_API,
     headers: {
         'X-Requested-With' : 'XMLHttpRequest'
     },
