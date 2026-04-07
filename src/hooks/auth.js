@@ -40,10 +40,24 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         await csrf()
 
         setErrors([])
-        // setStatus(null)
+        
+        // Manually extract XSRF token from cookie and add to headers
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`
+            const parts = value.split(`; ${name}=`)
+            if (parts.length === 2) return parts.pop().split(';').shift()
+            return null
+        }
+        
+        const xsrfToken = getCookie('XSRF-TOKEN')
+        
+        const headers = {}
+        if (xsrfToken) {
+            headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken)
+        }
 
         axios
-            .post('/login', props)
+            .post('/login', props, { headers })
             .then(() => mutate())
             .catch(error => {
                 if (error.response.status !== 422) throw error
