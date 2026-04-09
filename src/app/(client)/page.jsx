@@ -3,8 +3,9 @@
 import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
-import heroImg from "@/assets/images/hero-img.jpg"
+import heroImg from "@/assets/images/hero-img.png"
 
 
 import Partnership from "@/app/(client)/Partnership";
@@ -87,12 +88,12 @@ export default function Home() {
           />
 
           {/* Dark green overlay like the design */}
-          <div className="absolute inset-0 bg-linear-to-b from-[#0B2B26]/10 to-[#0B2B26]/80" />
+          <div className="absolute inset-0 bg-linear-to-b from-[#0B2B26]/10 to-[#07231F]/90" />
 
           {/* Content */}
           <div className="relative h-full flex items-end justify-center">
             {/* Bottom spacing matches the design feel */}
-            <div className="w-full px-4 sm:px-8 pb-14 sm:pb-16 md:pb-20 lg:pb-24 text-center">
+            <div className="w-full px-4 sm:px-8 pb-14 sm:pb-16 md:pb-20 lg:pb-14 text-center">
               <h1 className="sailec-bold text-white text-[44px] sm:text-[56px] md:text-[72px] lg:text-[120px] leading-[0.95]">
                 Saffy Inc.
               </h1>
@@ -174,12 +175,13 @@ export default function Home() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
           >
-            <button
+            <Link
+              href="/stories"
               type="button"
               className="rounded-full bg-[#0B2B26] px-5 py-3 text-[14px] text-[#E1F1D5] transition-transform hover:scale-105 sm:px-6 sm:text-[16px] sailec-medium"
             >
               MORE NEWS & STORIES
-            </button>
+            </Link>
           </motion.div>
         </motion.section>
 

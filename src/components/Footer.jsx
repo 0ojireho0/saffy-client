@@ -5,16 +5,16 @@ import Link from "next/link";
 export default function Footer() {
   const explorePages = [
     { label: "HOME", href: "/" },
-    { label: "PRODUCTS", href: "/products" },
-    { label: "BLOGS", href: "/blogs" },
+    { label: "GALLERY", href: "#" },
+    { label: "STORIES", href: "/stories" },
     { label: "SERVICE", href: "/service" },
     { label: "ABOUT", href: "/about" },
     { label: "CONTACT", href: "/contact" },
   ];
 
   const socials = [
-    { label: "FACEBOOK", href: "#" },
-    { label: "INSTAGRAM", href: "#" },
+    { label: "FACEBOOK", href: "https://www.facebook.com/manomanosaffy" },
+    { label: "INSTAGRAM", href: "https://www.instagram.com/manomanosaffy" },
     { label: "SHOPEE", href: "#" },
     { label: "LAZADA", href: "#" },
   ];
@@ -68,6 +68,7 @@ export default function Footer() {
               {socials.map((social) => (
                 <a
                   key={social.label}
+                  target="_blank"
                   href={social.href}
                   className="sailec-medium text-[18px] leading-[1.4] hover:opacity-80 transition-opacity"
                 >
@@ -85,10 +86,10 @@ export default function Footer() {
 
             <div className="mt-4">
               <a
-                href="mailto:marketing@saffyinc.com"
+                href="mailto:saffy@saffyinc.com"
                 className="sailec-medium text-[18px] leading-[1.4] break-all hover:opacity-80 transition-opacity"
               >
-                marketing@saffyinc.com
+                saffy@saffyinc.com
               </a>
             </div>
           </div>
