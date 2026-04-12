@@ -15,6 +15,8 @@ import {
 import differenceImage from "@/assets/images/about/how-we-make-difference.png";
 import missionImage from "@/assets/images/about/our-mission.png";
 
+import { useForm } from "react-hook-form";
+
 export default function ContactSection() {
   const fadeUp = {
     hidden: { opacity: 0, y: 28 },
@@ -51,6 +53,13 @@ export default function ContactSection() {
         delayChildren: 0.08,
       },
     },
+  };
+
+  const {  register, handleSubmit, formState: { errors } } = useForm();
+
+  const submitContactForm = (data) => {
+    // Handle form submission logic here
+    console.log(data);
   };
 
   return (
@@ -191,7 +200,7 @@ export default function ContactSection() {
                         strokeWidth={2}
                       />
                       <div className="sailec-regular text-white text-[18px] leading-[1.45]">
-                        <p>WEEKDAYS: &nbsp; 8:00 PM - 5:00 PM</p>
+                        <p>WEEKDAYS: &nbsp; 8:00 AM - 5:00 PM</p>
                         <p>WEEKENDS: &nbsp; CLOSED</p>
                       </div>
                     </div>
@@ -229,6 +238,7 @@ export default function ContactSection() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
+                onSubmit={handleSubmit(submitContactForm)}
               >
                 <motion.div variants={fadeUp}>
                   <label
@@ -240,8 +250,14 @@ export default function ContactSection() {
                   <input
                     id="name"
                     type="text"
-                    className="h-[48px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0 sm:h-[58px] md:h-[64px]"
+                    className="h-[48px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0 sm:h-[58px] md:h-[64px] sailec-regular"
+                    {...register("name", { required: "Name is required" })}
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600 sailec-regular">
+                      {errors.name.message}
+                    </p>
+                  )}
                 </motion.div>
 
                 <motion.div variants={fadeUp}>
@@ -254,8 +270,14 @@ export default function ContactSection() {
                   <input
                     id="email"
                     type="email"
-                    className="h-[48px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0 sm:h-[58px] md:h-[64px]"
+                    className="h-[48px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0 sm:h-[58px] md:h-[64px] sailec-regular"
+                    {...register("email", { required: "Email is required", pattern: { value: /^\S+@\S+\.\S+$/, message: "Email is invalid" } })}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600 sailec-regular">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </motion.div>
 
                 <motion.div variants={fadeUp}>
@@ -268,8 +290,14 @@ export default function ContactSection() {
                   <textarea
                     id="message"
                     rows={6}
-                    className="min-h-[112px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 py-3 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0"
+                    className="min-h-[112px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 py-3 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0 sailec-regular"
+                    {...register("message", { required: "Message is required" })}
                   />
+                  {errors.message && (
+                    <p className="mt-1 text-sm text-red-600 sailec-regular">
+                      {errors.message.message}
+                    </p>
+                  )}
                 </motion.div>
 
                 <motion.button

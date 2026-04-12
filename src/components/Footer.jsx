@@ -15,8 +15,8 @@ export default function Footer() {
   const socials = [
     { label: "FACEBOOK", href: "https://www.facebook.com/manomanosaffy" },
     { label: "INSTAGRAM", href: "https://www.instagram.com/manomanosaffy" },
-    { label: "SHOPEE", href: "#" },
-    { label: "LAZADA", href: "#" },
+    { label: "SHOPEE", href: "https://shopee.ph/shop/184550137" },
+    { label: "LAZADA", href: "https://www.lazada.com.ph/shop/saffy-handicrafts" },
   ];
 
   return (

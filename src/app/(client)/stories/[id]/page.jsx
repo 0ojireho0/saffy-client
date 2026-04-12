@@ -169,13 +169,13 @@ export default function StoryPage() {
                     variants={fadeUp}
                     custom={0.3}
                 >
-                    <div className="space-y-6 text-justify text-[15px] leading-8 text-[#5d7772] sm:text-base sm:leading-9 md:text-[22px] md:leading-10 sailec-regular">
+                    <div className="space-y-6 text-justify text-[15px] leading-8 text-[#5d7772] sm:text-base sm:leading-9 md:text-[22px] md:leading-10 sailec-regular break-words">
                         {formattedContent.length > 0 ? (
                             formattedContent.map((paragraph, index) => (
-                                <p key={index}>{paragraph}</p>
+                                <p key={index} className="break-words whitespace-normal">{paragraph}</p>
                             ))
                         ) : (
-                            <p>{story?.content}</p>
+                            <p className="break-words whitespace-normal">{story?.content}</p>
                         )}
                     </div>
                 </motion.section>
