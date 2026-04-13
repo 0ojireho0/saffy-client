@@ -8,6 +8,7 @@ import img3 from "@/assets/images/featured-products/img3.jpg";
 import img4 from "@/assets/images/featured-products/img4.jpg";
 import img5 from "@/assets/images/featured-products/img5.jpg";
 import ProductsPopupModal from '@/components/ProductsPopupModal';
+import Button from '@/components/Button';
 
 
 function FeaturedProducts() {
@@ -133,9 +134,10 @@ function FeaturedProducts() {
 
           {/* Button */}
           <div className="py-15 text-center px-4">
-            <button className="text-[#E1F1D5] bg-[#0B2B26] pt-3 pb-1.5 px-5 rounded-full sailec-medium text-[16px] cursor-pointer hover:scale-110 transition-transform">
-              VIEW MORE PRODUCTS
-            </button>
+            <Button 
+              title="VIEW MORE PRODUCTS"
+              className={"py-3 px-5 text-[#E1F1D5] bg-[#0B2B26] text-[16px] cursor-pointer hover:scale-110 transition-transform"}
+            />
           </div>
         </motion.section>
 

@@ -119,7 +119,7 @@ export default function AddNewPage() {
         animate="visible"
         variants={staggerContainer}
       >
-        <motion.div className="mb-6 flex items-center" variants={fadeUp} custom={0}>
+        <motion.div className="mb-6" variants={fadeUp} custom={0}>
           <Link
             href="/admin/stories"
             className="inline-flex items-center gap-1 tracking-wide text-[#227369] transition hover:opacity-80"
@@ -129,12 +129,6 @@ export default function AddNewPage() {
             </motion.span>
             <span className="text-[18px] md:text-[20px] helvetica-regular">BACK</span>
           </Link>
-
-          <div className="hidden w-full items-center justify-center md:flex">
-            <h1 className="text-3xl tracking-wide text-[#0B2A26] helvetica-bold sm:text-4xl">
-              ADD NEW
-            </h1>
-          </div>
         </motion.div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -144,7 +138,7 @@ export default function AddNewPage() {
             custom={0.1}
           >
             <motion.h1
-              className="text-xl helvetica-bold tracking-wide sm:text-4xl md:hidden"
+              className="text-xl helvetica-bold tracking-wide sm:text-2xl md:text-3xl"
               variants={fadeUp}
               custom={0.12}
             >
@@ -380,7 +374,7 @@ export default function AddNewPage() {
               type="submit"
               whileHover={{ y: -2, scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              className="rounded-full bg-[#E4E9A7] px-[20px] pb-[6px] pt-[12px] text-sm font-semibold uppercase tracking-wide text-[#05251F] shadow-sm sailec-medium transition"
+              className="rounded-full bg-[#E4E9A7] py-3 px-5 text-sm font-semibold uppercase tracking-wide text-[#05251F] shadow-sm sailec-medium transition"
               disabled={loading ? true : false}
             >
               {loading ? "LOADING..." : "CONFIRM"}

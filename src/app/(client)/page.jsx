@@ -13,6 +13,7 @@ import FeaturedProducts from "./FeaturedProducts";
 import Founder from "./Founder";
 import Philosophy from "./Philosophy";
 import FeaturedStories from "./FeaturedStories"
+import Button from "@/components/Button";
 
 
 
@@ -57,9 +58,7 @@ export default function Home() {
                 TOWARD DEVELOPMENT
               </p>
 
-              <button className="mt-7 sm:mt-8 text-[#05251F] sailec-medium bg-[#E4E9A7] pt-3 pb-1.5 px-[16px] text-center rounded-full">
-                VIEW PRODUCTS
-              </button>
+              <Button title="VIEW PRODUCTS" className={"text-[#05251F] bg-[#E4E9A7] text-[16px] py-3 px-[16px]"} />
             </div>
           </div>
         </section>

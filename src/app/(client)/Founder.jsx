@@ -3,6 +3,7 @@ import founder from "@/assets/images/sister-juliaan.png";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import Button from "@/components/Button";
 
 export default function Founder() {
   const fadeUp = {
@@ -65,10 +66,14 @@ export default function Founder() {
 
               <Link
                 href={"/about"}
-                className="mt-6 inline-block text-[#05251F] sailec-medium bg-[#E4E9A7] pt-3 pb-1.5 px-5 rounded-full"
               >
-                LEARN MORE
+                <Button 
+                  title="LEARN MORE"
+                  className={"text-[#05251F] bg-[#E4E9A7] text-[16px] cursor-pointer hover:scale-110 transition-transform py-3 px-5"}
+                />
               </Link>
+
+
             </motion.div>
 
             {/* RIGHT IMAGE */}

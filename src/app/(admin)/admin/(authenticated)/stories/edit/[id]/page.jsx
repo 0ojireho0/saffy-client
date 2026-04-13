@@ -173,7 +173,7 @@ export default function EditStory() {
     }
 
 
-  if (loading) return <Loading text="Validating story..." />
+  if (loading) return <Loading text="Loading..." />
 
   if (error) {
     return (
@@ -188,7 +188,7 @@ export default function EditStory() {
   return (
     <div className="min-h-screen bg-white text-[#0f3b36]">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10">
-        <div className="mb-6 flex items-center">
+        <div className="mb-6">
           <Link
             href="/admin/stories"
             className="inline-flex items-center gap-1 tracking-wide text-[#227369] transition hover:opacity-80"
@@ -198,17 +198,11 @@ export default function EditStory() {
               BACK
             </span>
           </Link>
-
-          <div className="hidden w-full items-center justify-center md:flex">
-            <h1 className="text-3xl tracking-wide text-[#0B2A26] helvetica-bold sm:text-4xl">
-              EDIT
-            </h1>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mx-auto flex w-full max-w-3xl flex-col items-center text-center">
-            <h1 className="text-xl helvetica-bold tracking-wide sm:text-4xl md:hidden">
+            <h1 className="text-xl helvetica-bold tracking-wide sm:text-2xl md:text-3xl">
               EDIT
             </h1>
 

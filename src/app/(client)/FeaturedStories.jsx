@@ -14,6 +14,7 @@ import useStories from "@/hooks/Client/useStories";
 import { isProd } from "@/lib/axios";
 import Loading from "@/components/Loading";
 import { ro } from "date-fns/locale"
+import Button from "@/components/Button"
 
 export default function FeaturedStories(){
 
@@ -171,9 +172,11 @@ export default function FeaturedStories(){
             <Link
               href="/stories"
               type="button"
-              className="rounded-full bg-[#0B2B26] px-5 py-3 text-[14px] text-[#E1F1D5] transition-transform hover:scale-105 sm:px-6 sm:text-[16px] sailec-medium"
             >
-              MORE NEWS & STORIES
+              <Button 
+                title={"MORE NEWS & STORIES"}
+                className={"bg-[#0B2B26] text-[#E1F1D5] transition-transform hover:scale-105 text-[16px] py-3 px-5"}
+              />
             </Link>
           </motion.div>
         </motion.section>

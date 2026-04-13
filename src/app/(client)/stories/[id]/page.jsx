@@ -80,7 +80,7 @@ export default function StoryPage() {
         ? story.content.split('\n').filter(item => item.trim() !== '')
         : []
 
-    if (loading) return <Loading text={"Validating story..."} />
+    if (loading) return <Loading text={"Loading..."} />
 
     if (error) {
         return <Error error={error} text={"Go Back to Stories"} backPath={"/admin/stories"} />

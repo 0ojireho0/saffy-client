@@ -80,7 +80,7 @@ export default function StoryPage() {
         ? story.content.split('\n').filter(item => item.trim() !== '')
         : []
 
-    if (loading) return <Loading text={"Validating story..."} />
+    if (loading) return <Loading text={"Loading..."} />
 
     if (error) {
         return <Error error={error} text={"Go Back to Stories"} backPath={"/admin/stories"} />
@@ -101,7 +101,7 @@ export default function StoryPage() {
                     custom={0}
                 >
                     <Link
-                        href="/stories"
+                        href="/admin/stories"
                         className="inline-flex items-center gap-1 text-sm text-[#227369] transition hover:opacity-80 sm:text-base"
                     >
                         <motion.span whileHover={{ x: -3 }} transition={{ duration: 0.2 }}>

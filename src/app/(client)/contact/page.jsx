@@ -282,6 +282,26 @@ export default function ContactSection() {
 
                 <motion.div variants={fadeUp}>
                   <label
+                    htmlFor="subject"
+                    className="sailec-regular mb-2 block text-[16px] text-[#567572]"
+                  >
+                    Subject
+                  </label>
+                  <input
+                    id="subject"
+                    type="text"
+                    className="h-[48px] w-full rounded-[4px] border border-[#D7D7D4] bg-transparent px-4 text-[#0C2F2A] outline-none transition focus:border-[#227369] focus:ring-0 sm:h-[58px] md:h-[64px] sailec-regular"
+                    {...register("subject", { required: "Subject is required", message: "Subject is invalid" })}
+                  />
+                  {errors.subject && (
+                    <p className="mt-1 text-sm text-red-600 sailec-regular">
+                      {errors.subject.message}
+                    </p>
+                  )}
+                </motion.div>
+
+                <motion.div variants={fadeUp}>
+                  <label
                     htmlFor="message"
                     className="sailec-regular mb-2 block text-[16px] text-[#567572]"
                   >
@@ -303,9 +323,9 @@ export default function ContactSection() {
                 <motion.button
                   variants={fadeUp}
                   type="submit"
-                  className="helvetica-bold rounded-full bg-[#D9DB93] px-[20px] text-[16px] uppercase text-[#0C2F2A] transition hover:opacity-90 h-[40px] pt-3 pb-1.5"
+                  className="mt-7 sm:mt-8 sailec-medium text-center rounded-full bg-[#E4E9A7] text-[#05251F] transition-transform hover:scale-105 text-[16px] py-3 px-5"
                 >
-                  Submit
+                  SUBMIT
                 </motion.button>
               </motion.form>
             </div>
