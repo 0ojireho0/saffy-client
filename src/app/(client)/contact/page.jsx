@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -15,9 +15,15 @@ import {
 import differenceImage from "@/assets/images/about/how-we-make-difference.png";
 import missionImage from "@/assets/images/about/our-mission.png";
 
+import useContactForm from "@/hooks/Client/useContactForm";
+
 import { useForm } from "react-hook-form";
 
 export default function ContactSection() {
+
+  const { submitForms } = useContactForm();
+  const [loading, setLoading] = useState(false);
+
   const fadeUp = {
     hidden: { opacity: 0, y: 28 },
     show: {
@@ -55,11 +61,11 @@ export default function ContactSection() {
     },
   };
 
-  const {  register, handleSubmit, formState: { errors } } = useForm();
+  const {  register, handleSubmit, formState: { errors }, reset } = useForm();
 
   const submitContactForm = (data) => {
-    // Handle form submission logic here
-    console.log(data);
+    setLoading(true);
+    submitForms({setLoading, reset, ...data})
   };
 
   return (
@@ -325,7 +331,7 @@ export default function ContactSection() {
                   type="submit"
                   className="mt-7 sm:mt-8 sailec-medium text-center rounded-full bg-[#E4E9A7] text-[#05251F] transition-transform hover:scale-105 text-[16px] py-3 px-5"
                 >
-                  SUBMIT
+                  {loading ? "Sending..." : "SUBMIT"}
                 </motion.button>
               </motion.form>
             </div>
