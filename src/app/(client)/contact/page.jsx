@@ -14,6 +14,7 @@ import {
 
 import differenceImage from "@/assets/images/about/how-we-make-difference.png";
 import missionImage from "@/assets/images/about/our-mission.png";
+import heroImg from "@/assets/images/hero-img.png"
 
 import useContactForm from "@/hooks/Client/useContactForm";
 
@@ -81,7 +82,7 @@ export default function ContactSection() {
             viewport={{ once: true, amount: 0.2 }}
           >
             <Image
-              src={missionImage}
+              src={heroImg}
               alt="SAFFY contact location"
               fill
               priority
@@ -140,7 +141,8 @@ export default function ContactSection() {
                             strokeWidth={2}
                           />
                         }
-                        text="marketing@saffyinc.com"
+                        text="saffy@saffyinc.com"
+                        href={"mailto:saffy@saffyinc.com"}
                       />
                       <InfoItem
                         icon={
@@ -150,6 +152,7 @@ export default function ContactSection() {
                           />
                         }
                         text="09209507589"
+                        href={"tel:09209507589"}
                       />
                       <InfoItem
                         icon={
@@ -159,6 +162,7 @@ export default function ContactSection() {
                           />
                         }
                         text="2594 Lamayan, Santa Ana, Manila,1009 Metro Manila"
+                        href={"https://maps.google.com/?q=2594 Lamayan, Santa Ana, Manila,1009 Metro Manila"}
                       />
                     </div>
                   </motion.div>
@@ -178,6 +182,7 @@ export default function ContactSection() {
                           />
                         }
                         text="FACEBOOK"
+                        href={"https://www.facebook.com/saffyinc"}
                       />
                       <InfoItem
                         icon={
@@ -187,6 +192,7 @@ export default function ContactSection() {
                           />
                         }
                         text="INSTAGRAM"
+                        href={"https://www.instagram.com/saffyinc"}
                       />
                     </div>
                   </motion.div>
@@ -360,7 +366,7 @@ export default function ContactSection() {
   );
 }
 
-function InfoItem({ icon, text }) {
+function InfoItem({ icon, text, href }) {
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     show: {
@@ -373,9 +379,9 @@ function InfoItem({ icon, text }) {
   return (
     <motion.div variants={fadeUp} className="flex items-start gap-4">
       <div className="shrink-0">{icon}</div>
-      <p className="sailec-regular text-white text-[18px] leading-[1.4]">
+      <a href={`${href}`} target="_blank" className="sailec-regular text-white text-[18px] leading-[1.4]">
         {text}
-      </p>
+      </a>
     </motion.div>
   );
 }

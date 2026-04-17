@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import missionImage from "@/assets/images/about/our-mission.png";
+import heroImg from "@/assets/images/hero-img.png"
 import { Goal } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -61,7 +61,7 @@ export default function MissionSection() {
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
               <Image
-                src={missionImage}
+                src={heroImg}
                 alt="Mission"
                 fill
                 priority
