@@ -340,7 +340,7 @@ function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle, onEdit, h
             className="h-full w-full"
           >
             <Image
-              src={item.publication_image_url}
+              src={`${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${item.publication_image_path}`}
               alt={item.title}
               fill
               className={`object-cover transition-opacity duration-300 ${

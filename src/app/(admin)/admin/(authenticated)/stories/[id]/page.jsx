@@ -70,6 +70,11 @@ export default function StoryPage() {
         })
     }
 
+    const getImageUrl = path => {
+        console.log(path)
+        if (!path) return '/images/placeholder-image.png'
+        return `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${path}`
+    }
 
     const formattedContent = story?.content
         ? story.content.split('\n').filter(item => item.trim() !== '')
@@ -152,7 +157,7 @@ export default function StoryPage() {
                 >
                     <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
                         <img
-                            src={story?.publication_image_url}
+                            src={getImageUrl(story?.publication_image_path)}
                             alt={story?.title || 'Story image'}
                             className="h-[220px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[560px]"
                         />

@@ -97,8 +97,10 @@ export default function EditStory() {
       image: null,
     })
 
-    if (story.publication_image_url) {
-      setPreviewUrl(story.publication_image_url)
+    if (story.publication_image_path) {
+      setPreviewUrl(
+        `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${story.publication_image_path}`
+      )
     }
   }, [story, reset])
 
