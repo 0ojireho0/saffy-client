@@ -96,7 +96,7 @@ function NewsStoryCard({ item, handleShowStory }) {
           )}
 
           <Image
-            src={`${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${item.publication_image_path}`}
+            src={item.publication_image_url}
             alt={item.title}
             fill
             className={`object-cover transition-all duration-500 group-hover:scale-[1.03] ${
