@@ -136,7 +136,7 @@ function FeaturedProducts() {
           <div className="py-15 text-center px-4">
             <Button 
               title="VIEW MORE PRODUCTS"
-              className={"py-3 px-5 text-[#E1F1D5] bg-[#0B2B26] text-[16px] cursor-pointer hover:scale-110 transition-transform"}
+              className={"py-3 px-5 mt-7 sm:mt-8 text-[#E1F1D5] bg-[#0B2B26] text-[16px] cursor-pointer hover:scale-110 transition-transform"}
             />
           </div>
         </motion.section>

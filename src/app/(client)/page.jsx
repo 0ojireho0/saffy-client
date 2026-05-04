@@ -58,7 +58,7 @@ export default function Home() {
                 TOWARD DEVELOPMENT
               </p>
 
-              <Button title="VIEW PRODUCTS" className={"text-[#05251F] bg-[#E4E9A7] text-[16px] py-3 px-[16px]"} />
+              <Button title="VIEW PRODUCTS" className={"text-[#05251F] bg-[#E4E9A7] text-[16px] py-3 px-[16px] mt-7 sm:mt-8"} />
             </div>
           </div>
         </section>
