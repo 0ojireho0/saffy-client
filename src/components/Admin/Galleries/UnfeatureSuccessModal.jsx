@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-function DeleteProductModal({ open, onClose, onDelete, loading }) {
+function UnfeatureSuccessModal({ open, onClose }) {
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
 
@@ -30,41 +30,18 @@ function DeleteProductModal({ open, onClose, onDelete, loading }) {
             <button
               type="button"
               onClick={onClose}
-              disabled={loading}
-              className="absolute right-[30px] top-[25px] text-[#1F746D] disabled:opacity-60"
+              className="absolute right-[30px] top-[25px] text-[#1F746D]"
             >
               <X size={20} strokeWidth={3.5} />
             </button>
 
             <h2 className="text-[#0B2A26] text-[26px] leading-none sailec-bold mb-5">
-              Delete this product?
+              Product Unfeatured!
             </h2>
 
-            <p className="text-[#52726E] text-[16px] leading-[1.25] sailec-regular mx-auto mb-10">
-              Permanently remove this product from the gallery. This action
-              cannot be undone and the product will no longer be visible or
-              available on the site.
+            <p className="text-[#52726E] text-[16px] leading-[1.25] sailec-regular mx-auto">
+              The product has been successfully removed as a featured item
             </p>
-
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={loading}
-                className="h-[52px] rounded-full bg-[#DCF5E4] text-[#1F746D] text-[20px] sailec-bold disabled:opacity-60"
-              >
-                Keep
-              </button>
-
-              <button
-                type="button"
-                onClick={onDelete}
-                disabled={loading}
-                className="h-[52px] rounded-full bg-[#EA1B10] text-white text-[20px] sailec-bold disabled:opacity-60"
-              >
-                {loading ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
           </motion.div>
         </motion.div>
       )}
@@ -72,4 +49,4 @@ function DeleteProductModal({ open, onClose, onDelete, loading }) {
   )
 }
 
-export default DeleteProductModal
+export default UnfeatureSuccessModal

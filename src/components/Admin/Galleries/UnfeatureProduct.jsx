@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-function DeleteProductModal({ open, onClose, onDelete, loading }) {
+function UnfeatureProductModal({ open, onClose, onFeature, loading }) {
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
 
@@ -37,13 +37,11 @@ function DeleteProductModal({ open, onClose, onDelete, loading }) {
             </button>
 
             <h2 className="text-[#0B2A26] text-[26px] leading-none sailec-bold mb-5">
-              Delete this product?
+              Unfeature this product?
             </h2>
 
             <p className="text-[#52726E] text-[16px] leading-[1.25] sailec-regular mx-auto mb-10">
-              Permanently remove this product from the gallery. This action
-              cannot be undone and the product will no longer be visible or
-              available on the site.
+              Remove this product from the Gallery section
             </p>
 
             <div className="grid grid-cols-2 gap-4">
@@ -51,18 +49,18 @@ function DeleteProductModal({ open, onClose, onDelete, loading }) {
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="h-[52px] rounded-full bg-[#DCF5E4] text-[#1F746D] text-[20px] sailec-bold disabled:opacity-60"
+                className="h-[52px] rounded-full bg-[#FFF4F4] text-[#EA1B10] text-[20px] sailec-bold disabled:opacity-60"
               >
-                Keep
+                Cancel
               </button>
 
               <button
                 type="button"
-                onClick={onDelete}
+                onClick={onFeature}
                 disabled={loading}
-                className="h-[52px] rounded-full bg-[#EA1B10] text-white text-[20px] sailec-bold disabled:opacity-60"
+                className="h-[52px] rounded-full bg-[#FFA43A] text-white text-[20px] sailec-bold disabled:opacity-60"
               >
-                {loading ? 'Deleting...' : 'Delete'}
+                {loading ? 'Unfeaturing...' : 'Unfeature'}
               </button>
             </div>
           </motion.div>
@@ -72,4 +70,4 @@ function DeleteProductModal({ open, onClose, onDelete, loading }) {
   )
 }
 
-export default DeleteProductModal
+export default UnfeatureProductModal
