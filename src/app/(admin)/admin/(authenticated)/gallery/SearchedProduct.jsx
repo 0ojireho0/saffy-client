@@ -1,4 +1,6 @@
+'use client'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Grid3X3,
   Palette,
@@ -23,6 +25,7 @@ import UnfeatureSuccessModal from '@/components/Admin/Galleries/UnfeatureSuccess
 
 function SearchedProduct({ product }) {
   const { DeleteGallery, FeatureGallery, UnfeatureGallery } = useGalleries()
+  const router = useRouter()
 
   const item = product?.item || product
 
@@ -123,6 +126,10 @@ function SearchedProduct({ product }) {
     setLoading(false)
   }
 
+  const handleEditPage = () => {
+    router.push(`/admin/gallery/edit/${item?.id}`)
+  }
+
   return (
     <>
       <div className="w-full max-w-[1180px] mx-auto py-2">
@@ -138,6 +145,7 @@ function SearchedProduct({ product }) {
           <button
             type="button"
             className="h-10 w-10 rounded-full bg-[#227369] flex items-center justify-center cursor-pointer"
+            onClick={handleEditPage}
           >
             <Pencil size={18} className="text-white" />
           </button>

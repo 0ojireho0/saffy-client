@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, CircleUserRound } from "lucide-react";
@@ -10,6 +10,7 @@ export default function Navbar() {
   const [showNavItems, setShowNavItems] = useState(false);
   const [showUserSettingModal, setShowUserSettingModal] = useState(false)
   const pathName = usePathname();
+  const activeUrl = useMemo(() => pathName || '', [pathName])
 
   const navItems = [
     { id: 1, title: "STORIES", path: "/admin/stories" },
@@ -54,7 +55,7 @@ export default function Navbar() {
           {/* Desktop nav */}
           <div className="hidden md:flex gap-12 lg:gap-13.5 justify-center items-center">
             {navItems.map((i) => {
-              const isActive = pathName === i.path;
+              const isActive = activeUrl.startsWith(i.path)
               return (
                 <Link
                   href={i.path}
@@ -120,7 +121,7 @@ export default function Navbar() {
 
               <nav className="flex flex-col px-4 py-4 gap-3">
                 {navItems.map((i) => {
-                  const isActive = pathName === i.path;
+                  const isActive = activeUrl.startsWith(i.path)
                   return (
                     <Link
                       href={i.path}

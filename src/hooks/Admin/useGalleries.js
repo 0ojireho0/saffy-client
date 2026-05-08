@@ -3,9 +3,11 @@
 import axios from '@/lib/axios'
 import Swal from 'sweetalert2'
 import useSWR from 'swr'
+import { useRouter } from 'next/navigation'
 
 export default function useGalleries({ search } = {}) {
   const shouldFetch = Boolean(search)
+  const router = useRouter()
 
   const {
     data: products,
@@ -143,6 +145,63 @@ export default function useGalleries({ search } = {}) {
     }
   }
 
+  const validateGallery = async ({ id, setError }) => {
+      try {
+          await csrf()
+          const res = await axios.get('/api/validate-gallery', {
+              params: { id }
+          })
+          return res.data
+      } catch (err) {
+          if (err?.response?.status === 404) {
+              setError('The gallery you are trying to access does not exist.')
+          } else {
+              setError('Server error. Please try again later.')
+          }
+          return null
+      }
+  }
+  
+  const UpdateGallery = async({formData, setLoading, id}) => {
+    await csrf()
+
+    try{
+      const res = await axios.post(`/api/admin/galleries/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      
+      if(res.status == 200){
+          Swal.fire({
+              title: "Success",
+              text: "Edit Gallery Successfully",
+              icon: "success",
+              allowOutsideClick: false
+          }).then((res) => {
+              if(res.isConfirmed){
+                  mutate()
+                  router.push("/admin/gallery")
+              }
+          })
+          
+      }
+
+
+      } catch (error) {
+          console.log(error.response?.data || error)
+          Swal.fire({
+              title: "Error",
+              text: error.response?.data || error,
+              icon: "error"
+          })
+      } finally {
+          setLoading(false)
+      }
+
+
+  }
+
 
   return {
     AddGallery,
@@ -153,6 +212,8 @@ export default function useGalleries({ search } = {}) {
     isValidating,
     DeleteGallery,
     FeatureGallery,
-    UnfeatureGallery
+    UnfeatureGallery,
+    validateGallery,
+    UpdateGallery
   }
 }
