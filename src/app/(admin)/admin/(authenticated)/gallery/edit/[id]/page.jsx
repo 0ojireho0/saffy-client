@@ -24,14 +24,27 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+
 import useGalleries from '@/hooks/Admin/useGalleries';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
 import { isProd } from '@/lib/axios';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
+import { useAuth } from '@/hooks/auth'
 
 export default function EditGallery() {
+
+  useAuth({
+    middleware: 'auth',
+  })
+
   const params = useParams();
   const { id } = params;
 
@@ -503,9 +516,11 @@ function InfoInput({ icon, label, register, errors }) {
   const fieldName = label.toLowerCase();
 
   return (
-    <div>
+    <Tooltip>
       <div className="flex items-center gap-[20px] text-[#167C71]">
-        {React.cloneElement(icon, { size: 34 })}
+        <TooltipTrigger asChild>
+          {React.cloneElement(icon, { size: 34 })}
+        </TooltipTrigger>
 
         <input
           {...register(fieldName, {
@@ -515,12 +530,14 @@ function InfoInput({ icon, label, register, errors }) {
           className="bg-transparent outline-none w-full sailec-regular"
         />
       </div>
-
+      <TooltipContent side="bottom">
+        <p className="sailec-regular">{label}</p>
+      </TooltipContent>
       {errors[fieldName] && (
         <p className="text-red-500 text-sm mt-1 ml-[54px] sailec-regular">
           {errors[fieldName].message}
         </p>
       )}
-    </div>
+    </Tooltip>
   );
 }

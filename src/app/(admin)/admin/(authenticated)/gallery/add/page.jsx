@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Button from '@/components/Button';
 import { Search, Plus, Grid3X3, Palette, Shapes, Ruler, Weight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useAuth } from '@/hooks/auth'
 
 import {
   Select,
@@ -15,10 +16,21 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import useGalleries from '@/hooks/Admin/useGalleries';
 import SuccessModal from '@/components/Admin/Galleries/SuccessModal';
 
 export default function AddGallery() {
+
+  useAuth({
+    middleware: 'auth',
+  })
+
   const {
     register,
     handleSubmit,
@@ -274,9 +286,11 @@ function InfoInput({ icon, label, register, errors }) {
   const fieldName = label.toLowerCase();
 
   return (
-    <div>
+    <Tooltip>
       <div className="flex items-center gap-[20px] text-[#167C71]">
-        {React.cloneElement(icon, { size: 34 })}
+        <TooltipTrigger asChild>
+          {React.cloneElement(icon, { size: 34 })}
+        </TooltipTrigger>
 
         <input
           {...register(fieldName, {
@@ -286,12 +300,14 @@ function InfoInput({ icon, label, register, errors }) {
           className="bg-transparent outline-none w-full sailec-regular"
         />
       </div>
-
+      <TooltipContent side="bottom">
+        <p className="sailec-regular">{label}</p>
+      </TooltipContent>
       {errors[fieldName] && (
         <p className="text-red-500 text-sm mt-1 ml-[54px] sailec-regular">
           {errors[fieldName].message}
         </p>
       )}
-    </div>
+    </Tooltip>
   );
 }

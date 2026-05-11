@@ -11,7 +11,15 @@ import {
   Pencil,
   Star,
   Tag,
+  FolderDown
 } from 'lucide-react'
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 
 import { isProd } from '@/lib/axios'
 
@@ -22,9 +30,13 @@ import useGalleries from '@/hooks/Admin/useGalleries'
 import FeatureSuccessModal from '@/components/Admin/Galleries/FeaturedSuccessModal'
 import UnfeatureProductModal from '@/components/Admin/Galleries/UnfeatureProduct'
 import UnfeatureSuccessModal from '@/components/Admin/Galleries/UnfeatureSuccessModal'
+import ArchiveProductModal from '@/components/Admin/Galleries/ArchiveModal';
+import ArchiveSuccessModal from '@/components/Admin/Galleries/ArchiveSuccessModal';
+import UnarchiveProductModal from '@/components/Admin/Galleries/UnarchiveModal';
+import UnarchiveSuccessModal from '@/components/Admin/Galleries/UnarchiveSuccessModal';
 
 function SearchedProduct({ product }) {
-  const { DeleteGallery, FeatureGallery, UnfeatureGallery } = useGalleries()
+  const { DeleteGallery, FeatureGallery, UnfeatureGallery, ArchiveGallery, UnarchiveGallery } = useGalleries()
   const router = useRouter()
 
   const item = product?.item || product
@@ -38,7 +50,11 @@ function SearchedProduct({ product }) {
     : ''
 
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [archiveOpen, setArchiveOpen] = useState(false)
+  const [unArchiveOpen, setUnarchiveOpen] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
+  const [successArchiveOpen, setSuccessArchiveOpen] = useState(false)
+  const [successUnarchiveOpen, setSuccessUnarchiveOpen] = useState(false)
   const [featureModalOpen, setFeatureModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [successFeatureOpen, setSuccessFeatureOpen] = useState(false)
@@ -98,6 +114,32 @@ function SearchedProduct({ product }) {
     setLoading(false)
   }
 
+  const handleArchive = async() => {
+    setLoading(true)
+
+    await ArchiveGallery({
+      id: item?.id,
+      onSuccess: () => {
+        setArchiveOpen(false)
+        setSuccessArchiveOpen(true)
+      }
+    })
+    setLoading(false)
+  }
+
+  const handleUnarchive = async() => {
+    setLoading(true)
+
+    await UnarchiveGallery({
+      id: item?.id,
+      onSuccess: () => {
+        setUnarchiveOpen(false)
+        setSuccessUnarchiveOpen(true)
+      }
+    })
+    setLoading(false)
+  }
+
   const handleFeatureProduct = async () => {
     setLoading(true)
 
@@ -134,13 +176,34 @@ function SearchedProduct({ product }) {
     <>
       <div className="w-full max-w-[1180px] mx-auto py-2">
         <div className="flex justify-end items-center gap-[18px] mb-[28px]">
-          <button
+          {/* <button
             type="button"
             onClick={() => setDeleteOpen(true)}
             className="h-10 w-10 rounded-full bg-[#F21B16] flex items-center justify-center cursor-pointer"
           >
             <Trash2 size={18} className="text-white" />
+          </button> */}
+          {item?.isArchive ? (
+            <>
+          <button
+            type="button"
+            onClick={() => setUnarchiveOpen(true)}
+            className="h-10 w-10 rounded-full bg-[#FEEEEE] flex items-center justify-center cursor-pointer"
+          >
+            <FolderDown size={18} className="text-[#E01D10]" />
           </button>
+            </>
+          ) : (
+            <>
+          <button
+            type="button"
+            onClick={() => setArchiveOpen(true)}
+            className="h-10 w-10 rounded-full bg-[#E01D10] flex items-center justify-center cursor-pointer"
+          >
+            <FolderDown size={18} className="text-white" />
+          </button>
+            </>
+          )}
 
           <button
             type="button"
@@ -199,11 +262,11 @@ function SearchedProduct({ product }) {
               </p>
 
               <div className="space-y-6">
-                <InfoRow icon={<Grid3X3 />} value={item?.material} />
-                <InfoRow icon={<Palette />} value={item?.color} />
-                <InfoRow icon={<Shapes />} value={item?.shape} />
-                <InfoRow icon={<Ruler />} value={item?.size} />
-                <InfoRow icon={<Weight />} value={item?.weight} />
+                <InfoRow icon={<Grid3X3 />} label="Material" value={item?.material} />
+                <InfoRow icon={<Palette />} label="Color" value={item?.color} />
+                <InfoRow icon={<Shapes />} label="Shape" value={item?.shape} />
+                <InfoRow icon={<Ruler />} label="Size" value={item?.size} />
+                <InfoRow icon={<Weight />} label="Weight" value={item?.weight} />
                 <InfoRow
                   icon={<Tag />}
                   value={getCategoryName(item?.category)}
@@ -214,16 +277,40 @@ function SearchedProduct({ product }) {
         </div>
       </div>
 
-      <DeleteProductModal
+      {/* <DeleteProductModal
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onDelete={handleDelete}
+        loading={loading}
+      /> */}
+
+      <ArchiveProductModal
+        open={archiveOpen}
+        onClose={() => setArchiveOpen(false)}
+        onDelete={handleArchive}
+        loading={loading}
+      />
+
+      <UnarchiveProductModal
+        open={unArchiveOpen}
+        onClose={() => setUnarchiveOpen(false)}
+        onDelete={handleUnarchive}
         loading={loading}
       />
 
       <DeleteSuccessModal
         open={successOpen}
         onClose={() => setSuccessOpen(false)}
+      />
+
+      <ArchiveSuccessModal
+        open={successArchiveOpen}
+        onClose={() => setSuccessArchiveOpen(false)}
+      />
+
+      <UnarchiveSuccessModal
+        open={successUnarchiveOpen}
+        onClose={() => setSuccessUnarchiveOpen(false)}
       />
 
       <FeatureSuccessModal 
@@ -254,21 +341,29 @@ function SearchedProduct({ product }) {
   )
 }
 
-function InfoRow({ icon, value }) {
+function InfoRow({ icon, value, label }) {
   if (!value) return null
 
   return (
-    <div className="flex items-center gap-[20px] text-[#167C71]">
-      {React.cloneElement(icon, {
-        size: 34,
-        strokeWidth: 2.2,
-        className: 'shrink-0',
-      })}
+    <Tooltip>
+      <div className="flex items-center gap-[20px] text-[#167C71]">
+        <TooltipTrigger asChild>
+          {React.cloneElement(icon, {
+            size: 34,
+            strokeWidth: 2.2,
+            className: 'shrink-0',
+          })}
+        </TooltipTrigger>
 
-      <p className="text-[#52726E] text-[18px] sm:text-[20px] sailec-regular">
-        {value}
-      </p>
-    </div>
+        <TooltipContent side="bottom">
+          <p className="sailec-regular">{label}</p>
+        </TooltipContent>
+
+        <p className="text-[#52726E] text-[18px] sm:text-[20px] sailec-regular">
+          {value}
+        </p>
+      </div>
+    </Tooltip>
   )
 }
 

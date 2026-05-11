@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 
-import { Plus, Trash2, Pencil, X } from 'lucide-react'
+import { Plus, Trash2, Pencil, X, FolderDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import img from '@/assets/images/about/how-we-make-difference.png'
 import { useAuth } from '@/hooks/auth'
@@ -85,12 +85,16 @@ export default function AdminStories() {
     middleware: 'auth',
   })
 
-  const { story, isLoading, DeleteStory } = useStories()
+  const { story, isLoading, DeleteStory, ArchiveStory, UnarchiveStory } = useStories()
 
   const [stories, setStories] = useState(initialStories)
   const [showDeleteToggle, setShowDeleteToggle] = useState(false)
+  const [showArchiveToggle, setShowArchiveToggle] = useState(false)
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
+  const [showArchiveConfirmation, setShowArchiveConfirmation] = useState(false)
+  const [showUnarchiveConfirmation, setShowUnarchiveConfirmation] = useState(false)
   const [selectedStoryId, setSelectedStoryId] = useState(null)
+  const [archiveLoading, setArchiveLoading] = useState(false)
 
   const [showEditToggle, setShowEditToggle] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -104,8 +108,46 @@ export default function AdminStories() {
     setShowDeleteToggle((prev) => !prev)
   }
 
+  const handleArchiveMode = () => {
+    setShowArchiveToggle((prev) => !prev)
+  }
+
   const handleEditMode = () => {
     setShowEditToggle((prev) => !prev)
+  }
+
+  const handleArchiveStory = (id) => {
+    setSelectedStoryId(id)
+    setShowArchiveConfirmation(true)
+  }
+
+  const handleUnarchiveStory = (id) => {
+    setSelectedStoryId(id)
+    setShowUnarchiveConfirmation(true)
+  }
+
+  const handleConfirmArchive = () => {
+    if (selectedStoryId === null) return
+
+    setArchiveLoading(true)
+    ArchiveStory({
+      id: selectedStoryId,
+      setShowArchiveConfirmation,
+      setSelectedStoryId,
+      setArchiveLoading
+    })
+  }
+
+  const handleConfirmUnarchive = () => {
+    if (selectedStoryId === null) return
+
+    setArchiveLoading(true)
+    UnarchiveStory({
+      id: selectedStoryId,
+      setShowUnarchiveConfirmation,
+      setSelectedStoryId,
+      setArchiveLoading
+    })
   }
 
   const handleDeleteStory = (id) => {
@@ -130,6 +172,16 @@ export default function AdminStories() {
     setSelectedStoryId(null)
   }
 
+  const handleCloseArchiveConfirmation = () => {
+    setShowArchiveConfirmation(false)
+    setSelectedStoryId(null)
+  }
+  
+  const handleCloseUnarchiveConfirmation = () => {
+    setShowUnarchiveConfirmation(false)
+    setSelectedStoryId(null)
+  }
+
   const handleEditStory = (row) => {
     router.push(`/admin/stories/edit/${row.id}`)
   }
@@ -145,7 +197,7 @@ export default function AdminStories() {
   useEffect(() => {
 
     if(showEditToggle){
-      setShowDeleteToggle(false)
+      setShowArchiveToggle(false)
     }
 
 
@@ -153,12 +205,12 @@ export default function AdminStories() {
 
   useEffect(() => {
 
-    if(showDeleteToggle){
+    if(showArchiveToggle){
       setShowEditToggle(false)
     }
 
 
-  }, [showDeleteToggle])
+  }, [showArchiveToggle])
 
 
 
@@ -181,7 +233,8 @@ export default function AdminStories() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="mt-8 flex items-center gap-3 sm:mt-10"
           >
-            <motion.button
+            {/* Delete  */}
+            {/* <motion.button
               whileHover={{ scale: 1.08, y: -2 }}
               whileTap={{ scale: 0.92 }}
               type="button"
@@ -194,6 +247,22 @@ export default function AdminStories() {
               aria-label="Toggle delete mode"
             >
               <Trash2 size={20} />
+            </motion.button> */}
+
+            {/* Archieve */}
+            <motion.button
+              whileHover={{ scale: 1.08, y: -2 }}
+              whileTap={{ scale: 0.92 }}
+              type="button"
+              onClick={handleArchiveMode}
+              className={`flex h-12 w-12 items-center justify-center rounded-full transition ${
+                showArchiveToggle
+                  ? 'bg-[#E01D10] text-white'
+                  : 'bg-[#F8DFDF] text-[#E01D10]'
+              }`}
+              aria-label="Toggle archive mode"
+            >
+              <FolderDown size={20} />
             </motion.button>
 
             <motion.button
@@ -248,11 +317,13 @@ export default function AdminStories() {
                     <StoryCard
                       key={item.id}
                       item={item}
-                      showDeleteToggle={showDeleteToggle}
+                      showArchiveToggle={showArchiveToggle}
                       showEditToggle={showEditToggle}
-                      onDelete={handleDeleteStory}
+                      // onDelete={handleDeleteStory}
+                      onArchive={handleArchiveStory}
                       onEdit={handleEditStory}
                       handleShowStory={handleShowStory}
+                      onUnarchive={handleUnarchiveStory}
                     />
                   ))
                 ) : (
@@ -269,11 +340,19 @@ export default function AdminStories() {
       </div>
 
       <AnimatePresence>
-        {showDeleteConfirmation && (
-          <DeleteConfirmation
-            onClose={handleCloseDeleteConfirmation}
-            onConfirm={handleConfirmDelete}
-            deleteLoading={deleteLoading}
+        {showArchiveConfirmation && (
+          <ArchiveConfirmation
+            onClose={handleCloseArchiveConfirmation}
+            onConfirm={handleConfirmArchive}
+            archiveLoading={archiveLoading}
+          />
+        )}
+
+        {showUnarchiveConfirmation && (
+          <UnarchiveConfirmation
+            onClose={handleCloseUnarchiveConfirmation}
+            onConfirm={handleConfirmUnarchive}
+            archiveLoading={archiveLoading}
           />
         )}
       </AnimatePresence>
@@ -282,7 +361,7 @@ export default function AdminStories() {
 }
 
 
-function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle, onEdit, handleShowStory }) {
+function StoryCard({ item, showArchiveToggle, onArchive, onUnarchive, showEditToggle, onEdit, handleShowStory }) {
   const [imageLoading, setImageLoading] = useState(true)
 
   return (
@@ -294,7 +373,10 @@ function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle, onEdit, h
       className="relative w-full max-w-[400px]"
     >
       <AnimatePresence>
-        {showDeleteToggle ? (
+        {showArchiveToggle ? (
+          <>
+          {item?.isArchive ? (
+            <>
           <motion.button
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -302,12 +384,32 @@ function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle, onEdit, h
             whileHover={{ scale: 1.12 }}
             whileTap={{ scale: 0.9 }}
             type="button"
-            onClick={() => onDelete(item.id)}
-            className="absolute -right-3 -top-3 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[#F13324] text-white shadow-md"
-            aria-label={`Delete ${item.title}`}
+            onClick={() => onUnarchive(item.id)}
+            className="absolute -right-3 -top-3 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#F13324] shadow-md"
+            aria-label={`Unarchive ${item.title}`}
           >
-            <X size={16} />
+            <FolderDown size={16} />
           </motion.button>
+            </>
+          ) : (
+            <>
+          <motion.button
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.9 }}
+            type="button"
+            onClick={() => onArchive(item.id)}
+            className="absolute -right-3 -top-3 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[#F13324] text-white shadow-md"
+            aria-label={`Archive ${item.title}`}
+          >
+            <FolderDown size={16} />
+          </motion.button>
+            </>
+          )}
+          
+          </>
         ) : showEditToggle ? (
           <motion.button
             initial={{ opacity: 0, scale: 0.6 }}
@@ -326,7 +428,7 @@ function StoryCard({ item, showDeleteToggle, onDelete, showEditToggle, onEdit, h
       </AnimatePresence>
 
       <div 
-        className="h-[440px] overflow-hidden rounded-[10px] border border-[#D7E4DF] bg-white shadow-sm cursor-pointer"
+        className={`h-[440px] overflow-hidden rounded-[10px] border border-[#D7E4DF] bg-white shadow-sm cursor-pointer ${item?.isArchive && 'opacity-30'}`}
         onClick={() => handleShowStory(item)}
       >
         <div className="relative h-[45%] w-full overflow-hidden bg-[#E9F0EC]">
@@ -455,6 +557,127 @@ function DeleteConfirmation({ onClose, onConfirm, deleteLoading }) {
               className="flex h-[52px] items-center justify-center rounded-full bg-[#F0160A] px-4 text-[20px] text-white sm:h-[56px] sm:text-[22px] sailec-bold"
             >
               {deleteLoading ? "Loading..." : "Delete"}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function ArchiveConfirmation({ onClose, onConfirm, archiveLoading }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+        onClick={(e) => e.stopPropagation()}
+        className="
+          relative
+          w-full max-w-[500px]
+          min-h-[250px]
+          rounded-[28px]
+          bg-[#F5F5F5]
+          px-5 py-5
+          sm:px-6 sm:py-6
+        "
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 text-[#247C74]"
+          aria-label="Close confirmation modal"
+        >
+          <X size={24} strokeWidth={3} />
+        </button>
+
+        <div className="flex h-full flex-col items-center justify-between text-center">
+          <div>
+            <h2 className="mt-2 text-[28px] leading-none text-[#052D28] sm:text-[36px] helvetica-bold">
+              Archive this entry?
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-[390px] text-[14px] leading-[1.35] text-[#5D7F79] sm:mt-5 sm:text-[16px] sailec-regular">
+              Archive this blog entry from the page. It will no longer be visible to readers but can be restored later if needed.
+            </p>
+          </div>
+
+          <div className="mt-6 grid w-full gap-3">
+            <button
+              type="button"
+              onClick={onConfirm}
+              disabled={archiveLoading ? true : false}
+              className="flex h-[52px] items-center justify-center rounded-full bg-[#F0160A] px-4 text-[20px] text-white sm:h-[56px] sm:text-[22px] sailec-bold"
+            >
+              {archiveLoading ? "Loading..." : "Archive"}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+function UnarchiveConfirmation({ onClose, onConfirm, archiveLoading }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+        onClick={(e) => e.stopPropagation()}
+        className="
+          relative
+          w-full max-w-[500px]
+          min-h-[250px]
+          rounded-[28px]
+          bg-[#F5F5F5]
+          px-5 py-5
+          sm:px-6 sm:py-6
+        "
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-4 top-4 text-[#247C74]"
+          aria-label="Close confirmation modal"
+        >
+          <X size={24} strokeWidth={3} />
+        </button>
+
+        <div className="flex h-full flex-col items-center justify-between text-center">
+          <div>
+            <h2 className="mt-2 text-[28px] leading-none text-[#052D28] sm:text-[36px] helvetica-bold">
+              Restore this entry?
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-[390px] text-[14px] leading-[1.35] text-[#5D7F79] sm:mt-5 sm:text-[16px] sailec-regular">
+              Restore this blog entry to the page. It will become visible to readers again.
+            </p>
+          </div>
+
+          <div className="mt-6 grid w-full gap-3">
+            <button
+              type="button"
+              onClick={onConfirm}
+              disabled={archiveLoading ? true : false}
+              className="flex h-[52px] items-center justify-center rounded-full bg-[#227369] px-4 text-[20px] text-white sm:h-[56px] sm:text-[22px] sailec-bold"
+            >
+              {archiveLoading ? "Loading..." : "Restore"}
             </button>
           </div>
         </div>

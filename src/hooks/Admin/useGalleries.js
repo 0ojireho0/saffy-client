@@ -120,6 +120,58 @@ export default function useGalleries({ search } = {}) {
     }
   }
 
+  const ArchiveGallery = async({id, onSuccess}) => {
+
+    
+    try{
+      await csrf()
+
+      const res = await axios.put(`/api/admin/archive-galleries/${id}`)
+
+      if(res.status === 200){
+        onSuccess?.(res.data)
+        mutate()
+      }
+    }catch(err){
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        'Something went wrong while featuring.'
+
+        Swal.fire({
+          title: 'Delete Failed',
+          text: message,
+          icon: 'error',
+          confirmButtonColor: '#EA1B10',
+        })
+    }
+  }
+
+  const UnarchiveGallery = async({id, onSuccess}) => {
+
+    
+    try{
+      await csrf()
+
+      const res = await axios.put(`/api/admin/unarchive-galleries/${id}`)
+
+      if(res.status === 200){
+        onSuccess?.(res.data)
+        mutate()
+      }
+    }catch(err){
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        'Something went wrong while featuring.'
+
+        Swal.fire({
+          title: 'Delete Failed',
+          text: message,
+          icon: 'error',
+          confirmButtonColor: '#EA1B10',
+        })
+    }
+  }
+
   const UnfeatureGallery = async({id, onSuccess}) => {
 
     try{
@@ -214,6 +266,8 @@ export default function useGalleries({ search } = {}) {
     FeatureGallery,
     UnfeatureGallery,
     validateGallery,
-    UpdateGallery
+    UpdateGallery,
+    ArchiveGallery,
+    UnarchiveGallery
   }
 }

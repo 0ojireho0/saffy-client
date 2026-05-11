@@ -114,6 +114,73 @@ export default function useStories() {
             })
     }
 
+    const ArchiveStory = async({id, setShowArchiveConfirmation, setSelectedStoryId, setArchiveLoading}) => {
+        await csrf()
+
+        axios.post(`/api/admin/archive-stories/${id}`)
+            .then((res) => {
+                if(res.status == 200){
+                    Swal.fire({
+                        title: "Archive",
+                        text: "Archive Content Successfully",
+                        icon: "success",
+                    })
+                    mutate()
+                    setShowArchiveConfirmation(false)
+                    setSelectedStoryId(null)
+                    
+                }
+            })
+            .catch((err) => {
+                const message =
+                    err?.response?.data?.message ||
+                    err?.response?.data?.error ||
+                    "Something went wrong while deleting.";
+
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "error",
+                });
+            })
+            .finally(() => {
+                setArchiveLoading(false)
+            })
+    }
+    const UnarchiveStory = async({id, setShowUnarchiveConfirmation, setSelectedStoryId, setArchiveLoading}) => {
+        await csrf()
+
+        axios.post(`/api/admin/unarchive-stories/${id}`)
+            .then((res) => {
+                if(res.status == 200){
+                    Swal.fire({
+                        title: "Restore",
+                        text: "Restore Content Successfully",
+                        icon: "success",
+                    })
+                    mutate()
+                    setShowUnarchiveConfirmation(false)
+                    setSelectedStoryId(null)
+                    
+                }
+            })
+            .catch((err) => {
+                const message =
+                    err?.response?.data?.message ||
+                    err?.response?.data?.error ||
+                    "Something went wrong while deleting.";
+
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "error",
+                });
+            })
+            .finally(() => {
+                setArchiveLoading(false)
+            })
+    }
+
     const validateStory = async ({ id, setError }) => {
         try {
             await csrf()
@@ -182,7 +249,9 @@ export default function useStories() {
         isLoading,
         DeleteStory,
         validateStory,
-        UpdateStory
+        UpdateStory,
+        ArchiveStory,
+        UnarchiveStory
     }
 
 }

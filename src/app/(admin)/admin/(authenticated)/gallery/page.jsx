@@ -6,9 +6,14 @@ import { useRouter } from 'next/navigation'
 import useGalleries from '@/hooks/Admin/useGalleries'
 import { MoonLoader } from 'react-spinners'
 import SearchedProduct from './SearchedProduct'
+import { useAuth } from '@/hooks/auth'
 
 
 export default function Gallery() {
+
+  useAuth({
+    middleware: 'auth',
+  })
 
   const router = useRouter()
 
