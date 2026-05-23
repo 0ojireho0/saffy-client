@@ -26,7 +26,7 @@ export default function useStories() {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const AddStory = async({formData, reset, setLoading, setPreviewUrl}) => {
+    const AddStory = async({formData, reset, setLoading, setPreviewUrl, setVideoPreviewUrl}) => {
         
         await csrf()
 
@@ -44,6 +44,7 @@ export default function useStories() {
                     })
                     reset()
                     setPreviewUrl("")
+                    setVideoPreviewUrl("")
                     mutate()
 
                 }

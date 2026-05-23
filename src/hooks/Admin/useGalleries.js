@@ -25,7 +25,7 @@ export default function useGalleries({ search } = {}) {
 
   const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-  const AddGallery = async ({ formData, reset, setLoading, setPreview, onSuccess }) => {
+  const AddGallery = async ({ formData, reset, setLoading, setPreviews, onSuccess }) => {
     try {
       setLoading?.(true)
 
@@ -39,7 +39,7 @@ export default function useGalleries({ search } = {}) {
 
       if (res.status === 200) {
         reset?.()
-        setPreview?.(null)
+        setPreviews?.(null)
         onSuccess?.(res.data)
       }
     } catch (err) {

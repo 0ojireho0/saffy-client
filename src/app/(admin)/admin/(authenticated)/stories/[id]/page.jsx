@@ -10,6 +10,8 @@ import useStories from '@/hooks/Admin/useStories'
 import Error from '@/components/Error'
 import Loading from '@/components/Loading'
 
+import { useAuth } from '@/hooks/auth'
+
 export default function StoryPage() {
     const params = useParams()
     const { id } = params
@@ -19,6 +21,9 @@ export default function StoryPage() {
     const [story, setStory] = useState(null)
 
     const { validateStory } = useStories()
+    useAuth({
+        middleware: "auth"
+    })
 
     useEffect(() => {
         if (!id) return
@@ -73,6 +78,12 @@ export default function StoryPage() {
     const getImageUrl = path => {
         console.log(path)
         if (!path) return '/images/placeholder-image.png'
+        return `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${path}`
+    }
+
+    const getVideoUrl = path => {
+        if (!path) return null
+
         return `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${path}`
     }
 
@@ -163,6 +174,22 @@ export default function StoryPage() {
                         />
                     </div>
                 </motion.section>
+
+                {story?.publication_video_path && (
+                    <motion.section
+                        className="mx-auto mt-8 max-w-6xl sm:mt-10 lg:mt-12"
+                        variants={fadeUp}
+                        custom={0.25}
+                    >
+                        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
+                            <video
+                                src={getVideoUrl(story.publication_video_path)}
+                                controls
+                                className="h-auto w-full"
+                            />
+                        </div>
+                    </motion.section>
+                )}
 
                 <motion.section
                     className="mx-auto mt-10 max-w-6xl px-1 sm:mt-12 md:mt-14"

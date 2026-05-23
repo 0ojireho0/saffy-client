@@ -19,7 +19,6 @@ export default function Gallery() {
 
   const [search, setSearch] = useState('')
   const [debounceSearch, setDebounceSearch] = useState('')
-  const [loading, setLoading] = useState(false)
 
   const { products, isLoading } = useGalleries({
     search: debounceSearch

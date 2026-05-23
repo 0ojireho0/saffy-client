@@ -35,12 +35,14 @@ export default function EditStory() {
   const [error, setError] = useState('')
   const [story, setStory] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState(null)
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [loadingBtn, setLoadingBtn] = useState(false)
+  const [videoInputKey, setVideoInputKey] = useState(Date.now())
 
   const { validateStory, UpdateStory } = useStories()
 
-  const { user } = useAuth({
+  useAuth({
     middleware: "auth"
   })
 
@@ -62,6 +64,7 @@ export default function EditStory() {
       date: null,
       timeRange: '',
       image: null,
+      video: null,
     },
   })
 
@@ -95,11 +98,18 @@ export default function EditStory() {
       date: story.publish_date ? new Date(story.publish_date) : null,
       timeRange: story.reading_time || '',
       image: null,
+      video: null,
     })
 
     if (story.publication_image_path) {
       setPreviewUrl(
         `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${story.publication_image_path}`
+      )
+    }
+
+    if (story.publication_video_path) {
+      setVideoPreviewUrl(
+        `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${story.publication_video_path}`
       )
     }
   }, [story, reset])
@@ -118,7 +128,8 @@ export default function EditStory() {
           formattedDate === story.publish_date &&
           data.timeRange === story.reading_time &&
           data.title === story.title &&
-          !(data.image instanceof File)
+          !(data.image instanceof File) &&
+          !(data.video instanceof File)
       )
   }
 
@@ -160,6 +171,9 @@ export default function EditStory() {
         // VERY IMPORTANT
         if (data.image instanceof File) {
             formData.append('image', data.image)
+        }
+        if (data.video instanceof File) {
+          formData.append('video', data.video)
         }
         setLoadingBtn(true)
         await UpdateStory({
@@ -384,6 +398,97 @@ export default function EditStory() {
                 </label>
               )}
             />
+          </div>
+
+          <div className="mx-auto mt-12 w-full max-w-3xl rounded-2xl border-2 border-[#e6eeea] bg-[#eef1ee] p-4 sm:p-6">
+            <Controller
+              name="video"
+              control={control}
+              rules={{
+                validate: (file) => {
+                  if (!file) return true
+
+                  const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime']
+
+                  if (!allowedTypes.includes(file.type)) {
+                    return 'Only MP4, WEBM, OGG, or MOV videos are allowed'
+                  }
+
+                  if (file.size > 100 * 1024 * 1024) {
+                    return 'Video must be 100MB or smaller'
+                  }
+
+                  return true
+                },
+              }}
+              render={({ field }) => (
+                <div className="relative">
+                  <input
+                    key={videoInputKey}
+                    id="video-upload"
+                    type="file"
+                    accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0]
+                      if (!file) return
+
+                      field.onChange(file)
+                      clearErrors('video')
+
+                      const nextVideoPreviewUrl = URL.createObjectURL(file)
+
+                      setVideoPreviewUrl((previousUrl) => {
+                        if (previousUrl && previousUrl.startsWith('blob:')) {
+                          URL.revokeObjectURL(previousUrl)
+                        }
+
+                        return nextVideoPreviewUrl
+                      })
+
+                      setVideoInputKey(Date.now())
+                    }}
+                  />
+
+                  <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-transparent transition sm:min-h-[340px]">
+                    {videoPreviewUrl ? (
+                      <>
+                        <video
+                          src={videoPreviewUrl}
+                          controls
+                          className="h-full w-full object-cover"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('video-upload')?.click()}
+                          className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#0f3b36] shadow-md transition hover:scale-105 hover:bg-[#E4E9A7]"
+                        >
+                          <Pencil size={20} />
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById('video-upload')?.click()}
+                        className="flex h-full w-full flex-col items-center justify-center"
+                      >
+                        <CirclePlus className="h-12 w-12" />
+                        <span className="text-2xl sailec-regular text-[#DBD7D7] sm:text-4xl">
+                          Add Video
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            />
+
+            {errors.video && (
+              <p className="mt-3 text-center text-sm text-red-500 sailec-regular">
+                {errors.video.message}
+              </p>
+            )}
           </div>
 
           <div className="mx-auto mt-12 w-full max-w-3xl">

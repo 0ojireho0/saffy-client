@@ -76,6 +76,12 @@ export default function StoryPage() {
         return `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${path}`
     }
 
+    const getVideoUrl = path => {
+        if (!path) return null
+
+        return `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${path}`
+    }
+
     const formattedContent = story?.content
         ? story.content.split('\n').filter(item => item.trim() !== '')
         : []
@@ -163,6 +169,22 @@ export default function StoryPage() {
                         />
                     </div>
                 </motion.section>
+
+                {story?.publication_video_path && (
+                    <motion.section
+                        className="mx-auto mt-8 max-w-6xl sm:mt-10 lg:mt-12"
+                        variants={fadeUp}
+                        custom={0.25}
+                    >
+                        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
+                            <video
+                                src={getVideoUrl(story.publication_video_path)}
+                                controls
+                                className="h-auto w-full"
+                            />
+                        </div>
+                    </motion.section>
+                )}
 
                 <motion.section
                     className="mx-auto mt-10 max-w-6xl px-1 sm:mt-12 md:mt-14"

@@ -60,6 +60,7 @@ export default function AddNewPage() {
       timeRange: '',
       content: '',
       image: null,
+      video: null,
     },
   });
 
@@ -70,6 +71,7 @@ export default function AddNewPage() {
   const { AddStory } = useStories()
 
   const [previewUrl, setPreviewUrl] = useState('');
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState('');
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [loading, setLoading] = useState(false)
 
@@ -86,8 +88,12 @@ export default function AddNewPage() {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
+
+      if (videoPreviewUrl) {
+        URL.revokeObjectURL(videoPreviewUrl);
+      }
     };
-  }, [previewUrl]);
+  }, [previewUrl, videoPreviewUrl]);
 
     const onSubmit = (data) => {
         const formData = new FormData();
@@ -98,7 +104,9 @@ export default function AddNewPage() {
         formData.append('timeRange', data.timeRange);
         formData.append('content', data.content);
         formData.append('image', data.image);
-
+        if (data.video) {
+          formData.append('video', data.video);
+        }
 
 
         setLoading(true)
@@ -106,7 +114,8 @@ export default function AddNewPage() {
             formData, 
             reset,
             setLoading,
-            setPreviewUrl
+            setPreviewUrl,
+            setVideoPreviewUrl
         })
 
   };
@@ -345,6 +354,91 @@ export default function AddNewPage() {
             {errors.image && (
               <p className="mt-3 text-center text-sm text-red-500 sailec-regular">
                 {errors.image.message}
+              </p>
+            )}
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            custom={0.5}
+            className="mx-auto mt-12 w-full max-w-3xl rounded-2xl border-2 border-[#e6eeea] bg-[#eef1ee] p-4 sm:p-6"
+          >
+            <Controller
+              name="video"
+              control={control}
+              rules={{
+                validate: (file) => {
+                  if (!file) return true;
+
+                  const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+
+                  if (!allowedTypes.includes(file.type)) {
+                    return 'Only MP4, WEBM, or OGG videos are allowed';
+                  }
+
+                  if (file.size > 50 * 1024 * 1024) {
+                    return 'Video must be 50MB or smaller';
+                  }
+
+                  return true;
+                },
+              }}
+              render={({ field }) => (
+                <motion.label
+                  whileHover={{ scale: 1.01 }}
+                  className={`relative flex min-h-[280px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition sm:min-h-[360px] ${
+                    errors.video
+                      ? 'border-red-300 bg-red-50/30'
+                      : 'border-transparent text-[#c5c7c4] hover:border-[#dbe4dd]'
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept="video/mp4,video/webm,video/ogg"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (!file) return;
+
+                      field.onChange(file);
+                      clearErrors('video');
+
+                      const nextVideoPreviewUrl = URL.createObjectURL(file);
+
+                      setVideoPreviewUrl((previousUrl) => {
+                        if (previousUrl) URL.revokeObjectURL(previousUrl);
+                        return nextVideoPreviewUrl;
+                      });
+                    }}
+                  />
+
+                  {videoPreviewUrl ? (
+                    <video
+                      src={videoPreviewUrl}
+                      controls
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center">
+                      <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        <CirclePlus className="h-12 w-12" />
+                      </motion.div>
+
+                      <span className="text-2xl sailec-regular text-[#DBD7D7] sm:text-4xl">
+                        Add Video
+                      </span>
+                    </div>
+                  )}
+                </motion.label>
+              )}
+            />
+
+            {errors.video && (
+              <p className="mt-3 text-center text-sm text-red-500 sailec-regular">
+                {errors.video.message}
               </p>
             )}
           </motion.div>

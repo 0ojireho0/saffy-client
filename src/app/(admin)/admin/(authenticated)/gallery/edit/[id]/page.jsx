@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/Button';
 import {
   Search,
@@ -11,6 +12,9 @@ import {
   Ruler,
   Weight,
   ChevronLeft,
+  ChevronRight,
+  X,
+  GalleryThumbnails,
 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'next/navigation';
@@ -28,8 +32,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-
+} from '@/components/ui/tooltip';
 
 import useGalleries from '@/hooks/Admin/useGalleries';
 import Loading from '@/components/Loading';
@@ -37,13 +40,34 @@ import Error from '@/components/Error';
 import { isProd } from '@/lib/axios';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import { useAuth } from '@/hooks/auth'
+import { useAuth } from '@/hooks/auth';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.55,
+      delay,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
 
 export default function EditGallery() {
-
   useAuth({
     middleware: 'auth',
-  })
+  });
 
   const params = useParams();
   const { id } = params;
@@ -70,47 +94,44 @@ export default function EditGallery() {
   });
 
   const categoriesList = [
-    {
-      name: 'FASHION',
-      value: 'fashion',
-    },
-    {
-      name: 'GIFTS & PACKAGING',
-      value: 'gifts',
-    },
-    {
-      name: 'HOME & GARDEN',
-      value: 'home',
-    },
-    {
-      name: 'KITCHEN & DINING',
-      value: 'kitchen',
-    },
-    {
-      name: 'STATIONARIES & DESK ACCESSORIES',
-      value: 'stationaries',
-    },
-    {
-      name: 'SUPPORTED COMMUNITIES (GBP PRODUCTS)',
-      value: 'supported',
-    },
-    {
-      name: 'CHRISTMAS & HOLIDAYS',
-      value: 'christmas',
-    },
-    {
-      name: 'TOYS & GAMES',
-      value: 'toys',
-    },
+    { name: 'FASHION', value: 'fashion' },
+    { name: 'GIFTS & PACKAGING', value: 'gifts' },
+    { name: 'HOME & GARDEN', value: 'home' },
+    { name: 'KITCHEN & DINING', value: 'kitchen' },
+    { name: 'STATIONARIES & DESK ACCESSORIES', value: 'stationaries' },
+    { name: 'SUPPORTED COMMUNITIES (GBP PRODUCTS)', value: 'supported' },
+    { name: 'CHRISTMAS & HOLIDAYS', value: 'christmas' },
+    { name: 'TOYS & GAMES', value: 'toys' },
   ];
 
   const { validateGallery, UpdateGallery } = useGalleries();
 
   const [gallery, setGallery] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [loadingBtn, setLoadingBtn] = useState(false);
+
+  const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
+
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'video/mp4',
+    'video/webm',
+    'video/quicktime',
+  ];
+
+  const baseUrl = isProd
+    ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API
+    : process.env.NEXT_PUBLIC_BACKEND_API;
+
+  const fileInputRef = useRef(null);
+
+  const [previews, setPreviews] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const [thumbnailIndex, setThumbnailIndex] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -150,16 +171,33 @@ export default function EditGallery() {
       weight: gallery.weight || '',
     });
 
-    if (gallery.img_path) {
-      setPreview(
-        `${
-          isProd
-            ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API
-            : process.env.NEXT_PUBLIC_BACKEND_API
-        }/storage/${gallery.img_path}`
-      );
+    if (gallery.media?.length) {
+      const existingPreviews = gallery.media.map((media) => ({
+        url: media.media_url?.startsWith('/storage')
+          ? `${baseUrl}${media.media_url}`
+          : media.media_url || `${baseUrl}/storage/${media.media_path}`,
+        type: media.media_type,
+        existing: true,
+      }));
+
+      setPreviews(existingPreviews);
+
+      const thumbIndex = gallery.media.findIndex((media) => media.is_thumbnail);
+      setThumbnailIndex(thumbIndex >= 0 ? thumbIndex : 0);
+      setCurrentMediaIndex(0);
+    } else if (gallery.img_path) {
+      setPreviews([
+        {
+          url: `${baseUrl}/storage/${gallery.img_path}`,
+          type: 'image',
+          existing: true,
+        },
+      ]);
+
+      setThumbnailIndex(0);
+      setCurrentMediaIndex(0);
     }
-  }, [gallery, reset]);
+  }, [gallery, reset, baseUrl]);
 
   const hasChanges = (data, gallery) => {
     const currentCategory = gallery.category?.toLowerCase() || '';
@@ -174,8 +212,105 @@ export default function EditGallery() {
       data.size === gallery.size &&
       data.title === gallery.title &&
       data.weight === gallery.weight &&
-      !(data.image instanceof File)
+      selectedFiles.length === 0
     );
+  };
+
+  const handleMediaChange = (event) => {
+    const files = Array.from(event.target.files || []);
+
+    if (files.length === 0) return;
+
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+    const invalidFile = files.find((file) => !allowedTypes.includes(file.type));
+
+    if (invalidFile) {
+      Swal.fire({
+        title: 'Invalid file type',
+        text: 'Only JPG, PNG, WEBP, MP4, WEBM, and MOV files are allowed.',
+        icon: 'warning',
+      });
+
+      event.target.value = '';
+      return;
+    }
+
+    if (totalSize > MAX_TOTAL_SIZE) {
+      Swal.fire({
+        title: 'Files too large',
+        text: 'Maximum total file size is 50MB.',
+        icon: 'warning',
+      });
+
+      event.target.value = '';
+      return;
+    }
+
+    const nextPreviews = files.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith('video/') ? 'video' : 'image',
+      existing: false,
+    }));
+
+    previews.forEach((preview) => {
+      if (preview.url?.startsWith('blob:')) {
+        URL.revokeObjectURL(preview.url);
+      }
+    });
+
+    setSelectedFiles(files);
+    setPreviews(nextPreviews);
+    setCurrentMediaIndex(0);
+    setThumbnailIndex(0);
+  };
+
+  const handleDeletePreview = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const currentPreview = previews[currentMediaIndex];
+
+    if (currentPreview?.existing) {
+      Swal.fire({
+        title: 'Existing media',
+        text: 'To remove existing uploaded media, upload a new media set. This edit form replaces all media when new files are selected.',
+        icon: 'info',
+      });
+      return;
+    }
+
+    if (currentPreview?.url?.startsWith('blob:')) {
+      URL.revokeObjectURL(currentPreview.url);
+    }
+
+    const updatedFiles = selectedFiles.filter((_, index) => index !== currentMediaIndex);
+    const updatedPreviews = previews.filter((_, index) => index !== currentMediaIndex);
+
+    setSelectedFiles(updatedFiles);
+    setPreviews(updatedPreviews);
+
+    const dataTransfer = new DataTransfer();
+
+    updatedFiles.forEach((file) => {
+      dataTransfer.items.add(file);
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.files = dataTransfer.files;
+    }
+
+    if (thumbnailIndex === currentMediaIndex) {
+      setThumbnailIndex(0);
+    } else if (thumbnailIndex > currentMediaIndex) {
+      setThumbnailIndex((prev) => prev - 1);
+    }
+
+    if (updatedPreviews.length === 0) {
+      setCurrentMediaIndex(0);
+      setThumbnailIndex(0);
+    } else if (currentMediaIndex >= updatedPreviews.length) {
+      setCurrentMediaIndex(updatedPreviews.length - 1);
+    }
   };
 
   const onSubmit = async (data) => {
@@ -228,8 +363,12 @@ export default function EditGallery() {
       formData.append('weight', data.weight);
     }
 
-    if (data.image instanceof File) {
-      formData.append('image', data.image);
+    selectedFiles.forEach((file) => {
+      formData.append('media[]', file);
+    });
+
+    if (selectedFiles.length > 0) {
+      formData.append('thumbnail_index', thumbnailIndex);
     }
 
     setLoadingBtn(true);
@@ -254,9 +393,18 @@ export default function EditGallery() {
   }
 
   return (
-    <div>
-      <div className="w-full max-w-[1180px] mx-auto flex flex-col md:flex-row justify-between items-start gap-5">
-        <div className="mb-6">
+    <motion.div
+      className="w-full bg-white"
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+    >
+      <motion.div
+        className="w-full max-w-[1180px] mx-auto flex flex-col md:flex-row justify-between items-start gap-5 px-5 sm:px-8 lg:px-0 pt-6"
+        variants={fadeUp}
+        custom={0}
+      >
+        <motion.div className="mb-6" whileHover={{ x: -3 }} transition={{ duration: 0.2 }}>
           <Link
             href="/admin/gallery"
             className="inline-flex items-center gap-1 tracking-wide text-[#227369] transition hover:opacity-80"
@@ -266,34 +414,53 @@ export default function EditGallery() {
               BACK
             </span>
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <form
+      <motion.form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full bg-white px-5 sm:px-8 lg:px-0"
+        variants={staggerContainer}
       >
-        <div className="w-full flex items-center justify-center">
-          <h1 className="helvetica-bold text-[#0B2A26] pt-[40px] sm:pt-[53px] pb-[40px] sm:pb-[60px] text-xl tracking-wide sm:text-2xl md:text-3xl">
+        <motion.div
+          className="w-full flex items-center justify-center"
+          variants={fadeUp}
+          custom={0.08}
+        >
+          <motion.h1
+            className="helvetica-bold text-[#0B2A26] pt-[20px] sm:pt-[33px] pb-[40px] sm:pb-[60px] text-xl tracking-wide sm:text-2xl md:text-3xl"
+            variants={fadeUp}
+            custom={0.12}
+          >
             EDIT GALLERY
-          </h1>
-        </div>
+          </motion.h1>
+        </motion.div>
 
-        <div className="w-full max-w-[1180px] mx-auto flex flex-col md:flex-row justify-between items-start gap-5">
+        <motion.div
+          className="w-full max-w-[1180px] mx-auto flex flex-col md:flex-row justify-between items-start gap-5"
+          variants={fadeUp}
+          custom={0.18}
+        >
           <div className="w-full md:max-w-[590px]">
-            <div className="flex items-center gap-[14px]">
+            <motion.div
+              className="flex items-center gap-[14px]"
+              whileHover={{ y: -2 }}
+              transition={{ duration: 0.2 }}
+            >
               <Search className="text-[#167C71]" size={32} />
 
-              <input
+              <motion.input
                 {...register('product_id', {
                   required: 'Product ID is required',
                 })}
                 placeholder="PRODUCT ID"
+                whileFocus={{ scale: 1.01 }}
+                transition={{ duration: 0.2 }}
                 className="w-full h-[42px] border border-[#167C71] rounded-[4px] px-[14px] sm:px-[16px]
                 text-[16px] sm:text-[18px] text-[#0B2A26] placeholder:text-[#9E9E9E]
                 outline-none focus:ring-1 focus:ring-[#167C71] helvetica-regular"
               />
-            </div>
+            </motion.div>
 
             {errors.product_id && (
               <p className="text-red-500 text-sm mt-1 ml-[46px] sailec-regular">
@@ -302,7 +469,11 @@ export default function EditGallery() {
             )}
           </div>
 
-          <div className="w-full">
+          <motion.div
+            className="w-full"
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.2 }}
+          >
             <Controller
               name="category"
               control={control}
@@ -337,105 +508,200 @@ export default function EditGallery() {
                 </div>
               )}
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="w-full max-w-[1180px] mx-auto mt-[42px] rounded-[18px] bg-[#F1F1F1] p-[30px] sm:p-[46px]">
+        <motion.div
+          className="w-full max-w-[1180px] mx-auto mt-[42px] rounded-[18px] bg-[#F1F1F1] p-[30px] sm:p-[46px]"
+          variants={fadeUp}
+          custom={0.26}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div>
-              <Controller
-                name="image"
-                control={control}
-                render={({ field }) => (
-                  <label className="relative flex min-h-[360px] lg:min-h-[640px] cursor-pointer items-center justify-center overflow-hidden rounded-[12px] border border-dashed border-[#7F8B88]">
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.target.files?.[0];
+            <motion.div variants={fadeUp} custom={0.32}>
+              <motion.div
+                className="relative flex min-h-[360px] lg:min-h-[640px] items-center justify-center overflow-hidden rounded-[12px] border border-dashed border-[#7F8B88]"
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.25 }}
+              >
+                {previews.length > 0 ? (
+                  <>
+                    <AnimatePresence mode="wait">
+                      {previews[currentMediaIndex]?.type === 'video' ? (
+                        <motion.video
+                          key={previews[currentMediaIndex]?.url}
+                          src={previews[currentMediaIndex].url}
+                          controls
+                          className="h-full w-full object-cover"
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.98 }}
+                          transition={{ duration: 0.25 }}
+                        />
+                      ) : (
+                        <motion.img
+                          key={previews[currentMediaIndex]?.url}
+                          src={previews[currentMediaIndex]?.url}
+                          alt={`Preview ${currentMediaIndex + 1}`}
+                          className="h-full w-full object-cover"
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.98 }}
+                          transition={{ duration: 0.25 }}
+                        />
+                      )}
+                    </AnimatePresence>
 
-                        if (!file) return;
-
-                        const allowedTypes = [
-                          'image/jpeg',
-                          'image/png',
-                          'image/webp',
-                        ];
-
-                        if (!allowedTypes.includes(file.type)) {
-                          Swal.fire({
-                            title: 'Invalid file type',
-                            text: 'Only JPG, PNG, and WEBP are allowed.',
-                            icon: 'warning',
-                          });
-
-                          event.target.value = '';
-                          return;
-                        }
-
-                        if (file.size > 2 * 1024 * 1024) {
-                          Swal.fire({
-                            title: 'File too large',
-                            text: 'Max file size is 2MB.',
-                            icon: 'warning',
-                          });
-
-                          event.target.value = '';
-                          return;
-                        }
-
-                        field.onChange(file);
-
-                        const nextPreview = URL.createObjectURL(file);
-
-                        setPreview((previousPreview) => {
-                          if (
-                            previousPreview &&
-                            previousPreview.startsWith('blob:')
-                          ) {
-                            URL.revokeObjectURL(previousPreview);
-                          }
-
-                          return nextPreview;
-                        });
-                      }}
-                    />
-
-                    {preview ? (
-                      <img
-                        src={preview}
-                        alt="Preview"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="w-[58px] h-[58px] bg-[#D8D3D3] rounded-full flex items-center justify-center mb-[20px]">
-                          <Plus size={38} className="text-white" />
-                        </div>
-
-                        <p className="text-[#D8D3D3] text-[30px] sailec-regular">
-                          Add New
-                        </p>
-                      </div>
+                    {previews[currentMediaIndex]?.type !== 'video' && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <motion.button
+                            type="button"
+                            whileHover={{ y: -2, scale: 1.06 }}
+                            whileTap={{ scale: 0.94 }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setThumbnailIndex(currentMediaIndex);
+                            }}
+                            className={`absolute top-4 left-4 z-10 flex items-center gap-2 rounded-full px-4 py-2 shadow-md border transition-all duration-200 sailec-regular text-sm ${
+                              thumbnailIndex === currentMediaIndex
+                                ? 'bg-[#DDE58F] border-[#0B2A26] text-[#0B2A26]'
+                                : 'bg-white/85 border-white text-[#0B2A26] hover:bg-[#DDE58F]'
+                            }`}
+                          >
+                            <GalleryThumbnails size={18} />
+                          </motion.button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="sailec-regular">
+                            Used as main gallery image
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     )}
-                  </label>
+
+                    {!previews[currentMediaIndex]?.existing && (
+                      <motion.button
+                        type="button"
+                        whileHover={{ y: -2, scale: 1.08 }}
+                        whileTap={{ scale: 0.94 }}
+                        onClick={handleDeletePreview}
+                        className="absolute top-4 right-4 bg-white/80 rounded-full p-2 shadow-md z-10"
+                      >
+                        <X size={24} className="text-[#0B2A26]" />
+                      </motion.button>
+                    )}
+
+                    {previews.length > 1 && (
+                      <>
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.08, x: -2 }}
+                          whileTap={{ scale: 0.94 }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            setCurrentMediaIndex((prev) =>
+                              prev === 0 ? previews.length - 1 : prev - 1
+                            );
+                          }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md z-10 cursor-pointer"
+                        >
+                          <ChevronLeft size={28} className="text-[#0B2A26]" />
+                        </motion.button>
+
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.08, x: 2 }}
+                          whileTap={{ scale: 0.94 }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            setCurrentMediaIndex((prev) =>
+                              prev === previews.length - 1 ? 0 : prev + 1
+                            );
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md z-10 cursor-pointer"
+                        >
+                          <ChevronRight size={28} className="text-[#0B2A26]" />
+                        </motion.button>
+
+                        <motion.div
+                          className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-sm px-3 py-1 rounded-full sailec-regular"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25 }}
+                        >
+                          {currentMediaIndex + 1} / {previews.length}
+                        </motion.div>
+                      </>
+                    )}
+
+                    <motion.label
+                      htmlFor="gallery-media"
+                      whileHover={{ y: -2, scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="absolute bottom-4 right-4 bg-white/80 rounded-full px-4 py-2 shadow-md cursor-pointer text-[#0B2A26] text-sm sailec-regular z-10"
+                    >
+                      Replace Media
+                    </motion.label>
+                  </>
+                ) : (
+                  <motion.label
+                    htmlFor="gallery-media"
+                    className="flex h-full min-h-[360px] lg:min-h-[640px] w-full cursor-pointer flex-col items-center justify-center"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.div
+                      className="w-[58px] h-[58px] bg-[#D8D3D3] rounded-full flex items-center justify-center mb-[20px]"
+                      animate={{ y: [0, -4, 0] }}
+                      transition={{
+                        duration: 2.2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    >
+                      <Plus size={38} className="text-white" />
+                    </motion.div>
+
+                    <p className="text-[#D8D3D3] text-[30px] sailec-regular">
+                      Add Media
+                    </p>
+                  </motion.label>
                 )}
-              />
+
+                <input
+                  id="gallery-media"
+                  type="file"
+                  hidden
+                  multiple
+                  accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime"
+                  ref={fileInputRef}
+                  onChange={handleMediaChange}
+                />
+              </motion.div>
 
               {errors.image && (
                 <p className="text-red-500 text-sm mt-2 sailec-regular">
                   {errors.image.message}
                 </p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="bg-[#EEF6E8] px-[40px] py-[30px] flex flex-col justify-center">
-              <input
+            <motion.div
+              className="bg-[#EEF6E8] px-[40px] py-[30px] flex flex-col justify-center"
+              variants={fadeUp}
+              custom={0.38}
+            >
+              <motion.input
                 {...register('title', {
                   required: 'Title is required',
                 })}
                 placeholder="Title"
+                whileFocus={{ scale: 1.01 }}
                 className="text-[48px] font-bold bg-transparent outline-none mb-2 sailec-bold"
               />
 
@@ -445,11 +711,12 @@ export default function EditGallery() {
                 </p>
               )}
 
-              <textarea
+              <motion.textarea
                 {...register('description', {
                   required: 'Description is required',
                 })}
                 placeholder="Description"
+                whileFocus={{ scale: 1.01 }}
                 className="bg-transparent outline-none mb-8 sailec-regular"
               />
 
@@ -459,7 +726,12 @@ export default function EditGallery() {
                 </p>
               )}
 
-              <div className="space-y-6">
+              <motion.div
+                className="space-y-6"
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+              >
                 <InfoInput
                   icon={<Grid3X3 />}
                   label="Material"
@@ -494,21 +766,30 @@ export default function EditGallery() {
                   register={register}
                   errors={errors}
                 />
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="flex justify-center mt-10 pb-10">
-          <Button
-            title={loadingBtn ? 'LOADING...' : 'CONFIRM'}
-            type="submit"
-            className="bg-[#DDE58F] px-[24px] py-[9px] rounded-full"
-            disabled={loadingBtn}
-          />
-        </div>
-      </form>
-    </div>
+        <motion.div
+          className="flex justify-center mt-10 pb-10"
+          variants={fadeUp}
+          custom={0.5}
+        >
+          <motion.div
+            whileHover={{ y: -2, scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            <Button
+              title={loadingBtn ? 'LOADING...' : 'CONFIRM'}
+              type="submit"
+              className="bg-[#DDE58F] px-[24px] py-[9px] rounded-full"
+              disabled={loadingBtn}
+            />
+          </motion.div>
+        </motion.div>
+      </motion.form>
+    </motion.div>
   );
 }
 
@@ -517,7 +798,12 @@ function InfoInput({ icon, label, register, errors }) {
 
   return (
     <Tooltip>
-      <div className="flex items-center gap-[20px] text-[#167C71]">
+      <motion.div
+        className="flex items-center gap-[20px] text-[#167C71]"
+        variants={fadeUp}
+        whileHover={{ x: 4 }}
+        transition={{ duration: 0.2 }}
+      >
         <TooltipTrigger asChild>
           {React.cloneElement(icon, { size: 34 })}
         </TooltipTrigger>
@@ -529,10 +815,12 @@ function InfoInput({ icon, label, register, errors }) {
           placeholder={label}
           className="bg-transparent outline-none w-full sailec-regular"
         />
-      </div>
+      </motion.div>
+
       <TooltipContent side="bottom">
         <p className="sailec-regular">{label}</p>
       </TooltipContent>
+
       {errors[fieldName] && (
         <p className="text-red-500 text-sm mt-1 ml-[54px] sailec-regular">
           {errors[fieldName].message}

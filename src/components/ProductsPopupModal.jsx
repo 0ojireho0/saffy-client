@@ -1,7 +1,8 @@
 'use client'
-import React, { useEffect } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import {
   X,
@@ -10,32 +11,44 @@ import {
   Shapes,
   RulerDimensionLine,
   Weight,
-} from "lucide-react";
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
 
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip'
 
 function ProductsPopupModal({
   show,
   setShow,
-  image,
+  media = [],
   title,
   description,
+  material = 'Capiz, brass wire, brass sheet',
+  color = 'Smoked, antique-plated',
+  shape = 'Nativity with 2 animals',
+  size = '16 cm L x 5 cm W x 13 cm H',
+  weight = '57 grams'
 }) {
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
+
   useEffect(() => {
     if (show) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden'
+      setCurrentMediaIndex(0)
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto'
     }
 
     return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [show]);
+      document.body.style.overflow = 'auto'
+    }
+  }, [show])
+
+  const currentMedia = media?.[currentMediaIndex]
 
   const backdropVariants = {
     hidden: { opacity: 0 },
@@ -47,7 +60,7 @@ function ProductsPopupModal({
       opacity: 0,
       transition: { duration: 0.18 },
     },
-  };
+  }
 
   const modalVariants = {
     hidden: {
@@ -60,7 +73,7 @@ function ProductsPopupModal({
       y: 0,
       scale: 1,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 260,
         damping: 24,
       },
@@ -73,35 +86,35 @@ function ProductsPopupModal({
         duration: 0.18,
       },
     },
-  };
+  }
 
   const productDetails = [
     {
       icon: <BrickWall size={26} className="text-[#227369] sm:size-[28px]" />,
-      label: "Material",
-      value: "Capiz, brass wire, brass sheet",
+      label: 'Material',
+      value: material,
     },
     {
       icon: <Palette size={26} className="text-[#227369] sm:size-[28px]" />,
-      label: "Finish",
-      value: "Smoked, antique-plated",
+      label: 'Color',
+      value: color,
     },
     {
       icon: <Shapes size={26} className="text-[#227369] sm:size-[28px]" />,
-      label: "Style",
-      value: "Nativity with 2 animals",
+      label: 'Shape',
+      value: shape,
     },
     {
       icon: <RulerDimensionLine size={26} className="text-[#227369] sm:size-[28px]" />,
-      label: "Dimensions",
-      value: "16 cm L x 5 cm W x 13 cm H",
+      label: 'Size',
+      value: size,
     },
     {
       icon: <Weight size={26} className="text-[#227369] sm:size-[28px]" />,
-      label: "Weight",
-      value: "57 grams",
+      label: 'Weight',
+      value: weight,
     },
-  ];
+  ]
 
   return (
     <AnimatePresence>
@@ -124,7 +137,6 @@ function ProductsPopupModal({
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col lg:grid lg:grid-cols-2">
-                {/* Mobile close */}
                 <button
                   type="button"
                   className="absolute right-3 top-3 z-20 rounded-full bg-white/85 p-1 text-[#227369] transition hover:text-[#0B2A26] lg:hidden"
@@ -133,19 +145,88 @@ function ProductsPopupModal({
                   <X size={28} />
                 </button>
 
-                {/* Image section */}
                 <div className="relative h-[260px] w-full bg-white sm:h-[340px] md:h-[420px] lg:h-full lg:min-h-[620px]">
-                  <Image
-                    src={image}
-                    alt={title || "product image"}
-                    fill
-                    className="object-contain p-4 sm:p-6 lg:p-8"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority
-                  />
+                  {currentMedia ? (
+                    <>
+                      <AnimatePresence mode="wait">
+                        {currentMedia.type === 'video' ? (
+                          <motion.video
+                            key={currentMedia.url}
+                            src={currentMedia.url}
+                            controls
+                            className="h-full w-full object-contain p-4 sm:p-6 lg:p-8"
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.25 }}
+                          />
+                        ) : (
+                          <motion.div
+                            key={currentMedia.url}
+                            className="relative h-full w-full"
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            <Image
+                              src={currentMedia.url}
+                              alt={title || 'product image'}
+                              fill
+                              className="object-contain p-4 sm:p-6 lg:p-8"
+                              sizes="(max-width: 1024px) 100vw, 50vw"
+                              priority
+                              unoptimized
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {media.length > 1 && (
+                        <>
+                          <motion.button
+                            type="button"
+                            whileHover={{ scale: 1.08, x: -2 }}
+                            whileTap={{ scale: 0.94 }}
+                            onClick={() => {
+                              setCurrentMediaIndex((prev) =>
+                                prev === 0 ? media.length - 1 : prev - 1
+                              )
+                            }}
+                            className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/85 p-2 shadow-md transition hover:bg-[#DDE58F]"
+                          >
+                            <ChevronLeft size={28} className="text-[#0B2A26]" />
+                          </motion.button>
+
+                          <motion.button
+                            type="button"
+                            whileHover={{ scale: 1.08, x: 2 }}
+                            whileTap={{ scale: 0.94 }}
+                            onClick={() => {
+                              setCurrentMediaIndex((prev) =>
+                                prev === media.length - 1 ? 0 : prev + 1
+                              )
+                            }}
+                            className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/85 p-2 shadow-md transition hover:bg-[#DDE58F]"
+                          >
+                            <ChevronRight size={28} className="text-[#0B2A26]" />
+                          </motion.button>
+
+                          <div className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-sm text-white sailec-regular">
+                            {currentMediaIndex + 1} / {media.length}
+                          </div>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <p className="text-[#D8D3D3] text-[24px] sailec-regular">
+                        No Media
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                {/* Content section */}
                 <div className="flex flex-col p-4 sm:p-6 lg:max-h-[90vh] lg:overflow-y-auto lg:p-8 xl:p-10">
                   <div className="hidden lg:flex justify-end">
                     <button
@@ -161,6 +242,7 @@ function ProductsPopupModal({
                     <h1 className="sailec-bold text-[28px] leading-tight text-[#0B2A26] sm:text-[36px] md:text-[44px] xl:text-[56px]">
                       {title}
                     </h1>
+
                     <p className="sailec-regular text-[15px] leading-relaxed text-[#52726E] sm:text-[17px] lg:max-w-[90%] xl:text-[22px]">
                       {description}
                     </p>
@@ -179,6 +261,7 @@ function ProductsPopupModal({
                               {detail.icon}
                             </button>
                           </TooltipTrigger>
+
                           <TooltipContent side="bottom">
                             <p className="sailec-regular">{detail.label}</p>
                           </TooltipContent>
@@ -197,7 +280,7 @@ function ProductsPopupModal({
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }
 
-export default ProductsPopupModal;
+export default ProductsPopupModal

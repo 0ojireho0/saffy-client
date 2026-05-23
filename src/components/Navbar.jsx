@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 export default function Navbar() {
   const [showNavItems, setShowNavItems] = useState(false);
   const pathName = usePathname();
+  const activeUrl = useMemo(() => pathName || '', [pathName])
 
   const navItems = [
     { id: 1, title: "HOME", path: "/" },
@@ -38,6 +39,14 @@ export default function Navbar() {
 
   const spring = { type: "spring", stiffness: 260, damping: 28 };
 
+  const isNavActive = (path) => {
+    if (path === '/') {
+      return activeUrl === '/'
+    }
+
+    return activeUrl === path || activeUrl.startsWith(`${path}/`)
+  }
+
   return (
     <>
       {/* Top bar */}
@@ -56,7 +65,7 @@ export default function Navbar() {
           {/* Desktop nav */}
           <div className="hidden md:flex gap-12 lg:gap-13.5 justify-center items-center">
             {navItems.map((i) => {
-              const isActive = pathName === i.path;
+              const isActive = isNavActive(i.path)
               return (
                 <Link
                   href={i.path}
@@ -114,7 +123,7 @@ export default function Navbar() {
 
               <nav className="flex flex-col px-4 py-4 gap-3">
                 {navItems.map((i) => {
-                  const isActive = pathName === i.path;
+                  const isActive = isNavActive(i.path)
                   return (
                     <Link
                       href={i.path}

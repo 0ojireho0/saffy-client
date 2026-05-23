@@ -1,10 +1,26 @@
 'use client'
-import React from "react";
-import testImg from "@/assets/images/test-img.png"
-import Image from "next/image";
-import Button from "@/components/Button";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+
+
+// Hooks
+import useGallery from "@/hooks/Client/useGallery";
+
+// Components
+import Loading from "@/components/Loading";
+import Button from "@/components/Button";
+import ProductsPopupModal from '@/components/ProductsPopupModal';
+
+// Assets
+import testImg from "@/assets/images/test-img.png"
+
+// Motion
 import { motion } from "framer-motion";
+
+// Helper
+import { isProd } from "@/lib/axios";
+
 
 const fadeUp = {
   hidden: {
@@ -62,179 +78,117 @@ const bannerAnimation = {
   },
 };
 
-const categories = [
-  {
-    title: "Featured Products",
-    products: [
-      { name: "Capiz Earrings", image: testImg },
-      { name: "Cala Earrings", image: testImg },
-      { name: "Capiz Ear Ring", image: testImg },
-      { name: "Capiz Ear Wings", image: testImg },
-      { name: "Buri Phone Bag with Handle", image: testImg },
-      { name: "Buri Envelope Bag", image: testImg },
-      { name: "Buri Pouch Bag", image: testImg },
-      { name: "Buri Packaging Bag Medium", image: testImg },
-      { name: "Buri Functional Handbag", image: testImg },
-      { name: "Capiz Earrings", image: testImg },
-    ],
-    viewProducts: false
-  },
-  {
-    title: "Fashion",
-    products: [
-      { name: "Raffia Fan", image: testImg },
-      { name: "Santan Fan", image: testImg },
-      { name: "Buri Woven Keychain", image: testImg },
-      { name: "Abaca Scrunchie", image: testImg },
-      { name: "Abaca Tissue Pack Holder", image: testImg },
-      { name: "Wood Bookmark", image: testImg },
-      { name: "Buri Giraffe Keychain", image: testImg },
-      { name: "Baluhan Fan", image: testImg },
-    ],
-    viewProducts: true,
-    path: "/gallery/fashion"
-  },
-  {
-    title: "Gift & Packaging",
-    products: [
-      { name: "Koala Planter", image: testImg },
-      { name: "Bamboo Tube Chime", image: testImg },
-      { name: "Acacia Wood Candle Holder", image: testImg },
-      { name: "Rattan Fan Wreath Small", image: testImg },
-      { name: "Capiz Sun Bird Hanging Ornament", image: testImg },
-      { name: "Capiz Butterfly Hanging Ornament", image: testImg },
-      { name: "Coconut Shell Pot", image: testImg },
-      { name: "Planter with Small Plants", image: testImg },
-      { name: "Rubber Door Mat", image: testImg },
-      { name: "Moon and Star Hanging Ornament", image: testImg },
-    ],
-    viewProducts: true,
-    path: "/gallery/gift-packaging"
-  },
-  {
-    title: "Home & Garden",
-    products: [
-      { name: "Coaster Set 4", image: testImg },
-      { name: "Bread Tray", image: testImg },
-      { name: "Charger Plate", image: testImg },
-      { name: "Shell Platter", image: testImg },
-      { name: "Set of Heart Bowls", image: testImg },
-      { name: "Dipping Bowl", image: testImg },
-      { name: "Raffia Tray", image: testImg },
-      { name: "Coco Spoon and Fork Set of 2", image: testImg },
-      { name: "Cake Plate", image: testImg },
-      { name: "Plato", image: testImg},
-    ],
-    viewProducts: true,
-    path: "/gallery/home-garden"
-  },
-  {
-    title: "Kitchen & Dining",
-    products: [
-      { name: "Coaster Set 4", image: testImg },
-      { name: "Bread Tray", image: testImg },
-      { name: "Charger Plate", image: testImg },
-      { name: "Shell Platter", image: testImg },
-      { name: "Set of Heart Bowls", image: testImg },
-      { name: "Dipping Bowl", image: testImg },
-      { name: "Raffia Tray", image: testImg },
-      { name: "Coco Spoon and Fork Set of 2", image: testImg },
-      { name: "Cake Plate", image: testImg },
-      { name: "Plato", image: testImg},
-    ],
-    viewProducts: true,
-    path: "/gallery/kitchen-dining"
-  },
-  {
-    title: "Stationaries & Desk Accessories",
-    products: [
-      { name: "Coaster Set 4", image: testImg },
-      { name: "Bread Tray", image: testImg },
-      { name: "Charger Plate", image: testImg },
-      { name: "Shell Platter", image: testImg },
-      { name: "Set of Heart Bowls", image: testImg },
-      { name: "Dipping Bowl", image: testImg },
-      { name: "Raffia Tray", image: testImg },
-      { name: "Coco Spoon and Fork Set of 2", image: testImg },
-      { name: "Cake Plate", image: testImg },
-      { name: "Plato", image: testImg},
-    ],
-    viewProducts: true,
-    path: "/gallery/stationaries-desk"
-  },
-  {
-    title: "Supported Communities",
-    products: [
-      { name: "Coaster Set 4", image: testImg },
-      { name: "Bread Tray", image: testImg },
-      { name: "Charger Plate", image: testImg },
-      { name: "Shell Platter", image: testImg },
-      { name: "Set of Heart Bowls", image: testImg },
-      { name: "Dipping Bowl", image: testImg },
-      { name: "Raffia Tray", image: testImg },
-      { name: "Coco Spoon and Fork Set of 2", image: testImg },
-      { name: "Cake Plate", image: testImg },
-      { name: "Plato", image: testImg},
-    ],
-    viewProducts: true,
-    path: "/gallery/supported-communities"
-  },
-  {
-    title: "Christmas & Holidays",
-    products: [
-      { name: "Coaster Set 4", image: testImg },
-      { name: "Bread Tray", image: testImg },
-      { name: "Charger Plate", image: testImg },
-      { name: "Shell Platter", image: testImg },
-      { name: "Set of Heart Bowls", image: testImg },
-      { name: "Dipping Bowl", image: testImg },
-      { name: "Raffia Tray", image: testImg },
-      { name: "Coco Spoon and Fork Set of 2", image: testImg },
-      { name: "Cake Plate", image: testImg },
-      { name: "Plato", image: testImg},
-    ],
-    viewProducts: true,
-    path: "/gallery/christmas-holidays"
-  },
-  {
-    title: "Toys & Games",
-    products: [],
-    viewProducts: false,
-    path: "/gallery/toys-games"
-  },
-];
+
 
 
 function ProductCard({ product }) {
-  return (
-    <motion.article
-      variants={productAnimation}
-      whileHover={{
-        y: -6,
-        transition: { duration: 0.2 },
-      }}
-      className="text-center"
-    >
-      <div className="mb-3 flex aspect-square items-center justify-center">
-        <motion.div
-          whileHover={{
-            scale: 1.05,
-            transition: { duration: 0.2 },
-          }}
-          className="flex h-full w-full items-center justify-center"
-        >
-          <Image
-            src={product.image}
-            alt={product.name}
-            className="max-h-full max-w-full object-contain"
-          />
-        </motion.div>
-      </div>
+  const backendUrl = isProd
+    ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API
+    : process.env.NEXT_PUBLIC_BACKEND_API;
 
-      <h3 className="mx-auto max-w-[150px] text-xs font-medium leading-snug text-[#0B2A26] sm:text-[13px] sailec-bold">
-        {product.name}
-      </h3>
-    </motion.article>
+  const productMedia = product?.media?.length
+    ? product.media.map((media) => ({
+        url: media.media_url?.startsWith('/storage')
+          ? `${backendUrl}${media.media_url}`
+          : media.media_url || `${backendUrl}/storage/${media.media_path}`,
+        type: media.media_type,
+      }))
+    : [
+        {
+          url: product.img_path
+            ? `${backendUrl}/storage/${product.img_path}`
+            : testImg,
+          type: 'image',
+        },
+      ];
+
+  const imageUrl = productMedia[0]?.url || testImg;
+
+  const [getItemDesc, setGetItemDesc] = useState({
+    media: [],
+    title: '',
+    description: '',
+    material: '',
+    color: '',
+    shape: '',
+    size: '',
+    weight: ''
+  });
+
+  const [showProductModal, setShowProductModal] = useState(false);
+
+  const showProductsModal = (product) => {
+    setShowProductModal(true);
+
+    setGetItemDesc({
+      media: productMedia,
+      title: product.title,
+      description: product.description,
+      material: product.material,
+      color: product.color,
+      shape: product.shape,
+      size: product.size,
+      weight: product.weight,
+    });
+  };
+
+  return (
+    <>
+      <motion.article
+        variants={productAnimation}
+        whileHover={{
+          y: -6,
+          transition: { duration: 0.2 },
+        }}
+        className="text-center cursor-pointer"
+        onClick={() => showProductsModal(product)}
+      >
+        <div className="mb-3 aspect-square">
+          <motion.div
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.2 },
+            }}
+            className="relative h-full w-full overflow-hidden"
+          >
+            {productMedia[0]?.type === 'video' ? (
+              <video
+                src={imageUrl}
+                className="h-full w-full object-cover"
+                muted
+                playsInline
+              />
+            ) : (
+              <Image
+                src={imageUrl}
+                alt={product.title || 'Gallery product'}
+                className="object-cover"
+                fill
+                unoptimized
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+              />
+            )}
+          </motion.div>
+        </div>
+
+        <h3 className="mx-auto max-w-[150px] text-xs font-medium leading-snug text-[#0B2A26] sm:text-[13px] sailec-bold">
+          {product.title}
+        </h3>
+      </motion.article>
+
+      <ProductsPopupModal
+        setShow={setShowProductModal}
+        show={showProductModal}
+        media={getItemDesc.media}
+        title={getItemDesc.title}
+        description={getItemDesc.description}
+        material={getItemDesc.material}
+        color={getItemDesc.color}
+        shape={getItemDesc.shape}
+        size={getItemDesc.size}
+        weight={getItemDesc.weight}
+      />
+    </>
   );
 }
 
@@ -267,7 +221,7 @@ function CategorySection({ title, products, viewProducts, path }) {
           className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-10 lg:gap-y-9"
         >
           {products.map((product, index) => (
-            <ProductCard key={`${product.name}-${index}`} product={product} />
+            <ProductCard key={`${product.title}-${index}`} product={product} />
           ))}
         </motion.div>
       )}
@@ -337,6 +291,15 @@ function CraftBanner() {
 }
 
 function Gallery() {
+
+
+
+  const { gallery, isLoading } = useGallery()
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <main className="mx-auto w-full max-w-[1550px] bg-white px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <motion.h1
@@ -348,7 +311,7 @@ function Gallery() {
         Gallery
       </motion.h1>
 
-      {categories.map((category) => (
+      {gallery.map((category) => (
         <CategorySection
           key={category.title}
           title={category.title}
