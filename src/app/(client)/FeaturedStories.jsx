@@ -134,12 +134,11 @@ export default function FeaturedStories(){
                     variants={fadeUp}
                     className="group relative isolate overflow-hidden bg-slate-950 cursor-pointer min-h-[420px] h-[65vh] sm:h-[60vh] lg:h-[70vh] xl:h-[85vh]"
                 >
-                    <Image
-                    src={`${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${item.publication_image_path}`}
+                  <Image
+                    src={item.publication_image_path}
                     alt={item.title.replace("\n", " ")}
                     fill
                     priority={item.id === 1}
-                    unoptimized
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                     />
