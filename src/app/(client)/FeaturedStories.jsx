@@ -1,4 +1,4 @@
-
+'use client'
 import React from "react"
 import { useRouter } from "next/navigation"
 
@@ -13,7 +13,6 @@ import Image from "next/image";
 import useStories from "@/hooks/Client/useStories";
 import { isProd } from "@/lib/axios";
 import Loading from "@/components/Loading";
-import { ro } from "date-fns/locale"
 import Button from "@/components/Button"
 
 export default function FeaturedStories(){
@@ -109,9 +108,10 @@ export default function FeaturedStories(){
                     alt={item.title.replace("\n", " ")}
                     fill
                     priority={item.id === 1}
+                    unoptimized
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                    />
+                  />
 
                     <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/10 via-black/10 to-[#06332B] opacity-70 transition-opacity duration-300 lg:opacity-0 lg:group-hover:opacity-100" />
 
@@ -135,10 +135,11 @@ export default function FeaturedStories(){
                     className="group relative isolate overflow-hidden bg-slate-950 cursor-pointer min-h-[420px] h-[65vh] sm:h-[60vh] lg:h-[70vh] xl:h-[85vh]"
                 >
                     <Image
-                    src={item.publication_image_path}
+                    src={`${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${item.publication_image_path}`}
                     alt={item.title.replace("\n", " ")}
                     fill
                     priority={item.id === 1}
+                    unoptimized
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                     />
@@ -175,7 +176,7 @@ export default function FeaturedStories(){
             >
               <Button 
                 title={"MORE NEWS & STORIES"}
-                className={"bg-[#0B2B26] text-[#E1F1D5] transition-transform hover:scale-105 text-[16px] py-3 px-5"}
+                className={"bg-[#0B2B26] text-[#E1F1D5] transition-transform hover:scale-105 text-[16px] py-3 px-5 cursor-pointer"}
               />
             </Link>
           </motion.div>

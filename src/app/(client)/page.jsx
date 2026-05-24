@@ -14,6 +14,7 @@ import Founder from "./Founder";
 import Philosophy from "./Philosophy";
 import FeaturedStories from "./FeaturedStories"
 import Button from "@/components/Button";
+import Link from "next/link";
 
 
 
@@ -58,7 +59,10 @@ export default function Home() {
                 TOWARD DEVELOPMENT
               </p>
 
-              <Button title="VIEW PRODUCTS" className={"text-[#05251F] bg-[#E4E9A7] text-[16px] py-3 px-[16px] mt-7 sm:mt-8"} />
+              <Link href={"/gallery"}>
+                <Button title="VIEW PRODUCTS" className={"text-[#05251F] bg-[#E4E9A7] text-[16px] py-3 px-[16px] mt-7 sm:mt-8 cursor-pointer"} />
+              </Link>
+              
             </div>
           </div>
         </section>
