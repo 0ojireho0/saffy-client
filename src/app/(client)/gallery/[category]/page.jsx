@@ -164,8 +164,7 @@ function CategorySection({ title, products = [] }) {
     <motion.section
       variants={fadeUp}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.18 }}
+      animate="visible"
       className="mb-14 sm:mb-16"
     >
       <motion.h2
@@ -178,13 +177,12 @@ function CategorySection({ title, products = [] }) {
       {products.length <= 0 ? (
         <CraftBanner />
       ) : (
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-10 lg:gap-y-9"
-        >
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-10 lg:gap-y-9"
+          >
           {products.map((product, index) => (
             <ProductCard
               key={`${product.product_id || product.title}-${index}`}
