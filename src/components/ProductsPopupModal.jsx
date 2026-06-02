@@ -127,16 +127,16 @@ function ProductsPopupModal({
           exit="exit"
           onClick={() => setShow(false)}
         >
-          <div className="flex h-dvh items-center justify-center px-3 py-3 sm:px-6 sm:py-6 lg:px-8">
+          <div className="flex min-h-dvh items-center justify-center px-3 py-3 sm:px-6 sm:py-6 lg:px-8">
             <motion.div
-              className="relative h-[92dvh] w-full max-w-[420px] overflow-hidden rounded-[18px] bg-[#EEF6E8] shadow-xl sm:h-[88vh] sm:max-w-[720px] md:max-w-[860px] lg:h-[90vh] lg:max-w-6xl"
+              className="relative w-full max-w-[420px] overflow-hidden rounded-[18px] bg-[#EEF6E8] shadow-xl max-h-[calc(100dvh-24px)] sm:max-w-[720px] sm:max-h-[calc(100vh-48px)] md:max-w-[860px] lg:max-w-6xl lg:max-h-[90vh]"
               variants={modalVariants}
               initial="hidden"
               animate="show"
               exit="exit"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex h-full min-h-0 flex-col lg:grid lg:grid-cols-2">
+              <div className="flex max-h-[calc(100dvh-24px)] flex-col overflow-y-auto lg:grid lg:max-h-[90vh] lg:grid-cols-2 lg:overflow-hidden">
                 <button
                   type="button"
                   className="absolute right-3 top-3 z-20 rounded-full bg-white/85 p-1 text-[#227369] transition hover:text-[#0B2A26] lg:hidden"
@@ -145,7 +145,7 @@ function ProductsPopupModal({
                   <X size={28} />
                 </button>
 
-                <div className="relative h-[230px] shrink-0 w-full bg-white sm:h-[340px] md:h-[420px] lg:h-full lg:min-h-0">
+                <div className="relative h-[230px] shrink-0 w-full bg-white sm:h-[340px] md:h-[420px] lg:h-auto lg:min-h-[620px]">
                   {currentMedia ? (
                     <>
                       <AnimatePresence mode="wait">
@@ -227,7 +227,7 @@ function ProductsPopupModal({
                   )}
                 </div>
 
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 md:p-8 lg:h-full lg:p-8 xl:p-10">
+                <div className="flex flex-col p-4 sm:p-6 lg:max-h-[90vh] lg:overflow-y-auto lg:p-8 xl:p-10">
                   <div className="hidden lg:flex justify-end">
                     <button
                       type="button"
