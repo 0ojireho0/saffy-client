@@ -64,6 +64,48 @@ const staggerContainer = {
   },
 };
 
+const normalizeText = (value) => String(value ?? '').trim();
+
+const normalizeCategory = (category) => {
+  const value = normalizeText(category).toLowerCase();
+
+  const categoryMap = {
+    fashion: 'fashion',
+
+    gifts: 'gifts',
+    gift: 'gifts',
+    'gifts & packaging': 'gifts',
+    'gifts and packaging': 'gifts',
+
+    home: 'home',
+    'home & garden': 'home',
+    'home and garden': 'home',
+
+    kitchen: 'kitchen',
+    'kitchen & dining': 'kitchen',
+    'kitchen and dining': 'kitchen',
+
+    stationaries: 'stationaries',
+    stationery: 'stationaries',
+    'stationaries & desk accessories': 'stationaries',
+    'stationaries and desk accessories': 'stationaries',
+
+    supported: 'supported',
+    'supported communities': 'supported',
+    'supported communities (gbp products)': 'supported',
+
+    christmas: 'christmas',
+    'christmas & holidays': 'christmas',
+    'christmas and holidays': 'christmas',
+
+    toys: 'toys',
+    'toys & games': 'toys',
+    'toys and games': 'toys',
+  };
+
+  return categoryMap[value] || value;
+};
+
 export default function EditGallery() {
   useAuth({
     middleware: 'auth',
@@ -78,6 +120,7 @@ export default function EditGallery() {
     formState: { errors },
     reset,
     control,
+    watch
   } = useForm({
     defaultValues: {
       product_id: '',
@@ -159,16 +202,16 @@ export default function EditGallery() {
     if (!gallery) return;
 
     reset({
-      product_id: gallery.product_id || '',
-      category: gallery.category?.toLowerCase() || '',
+      product_id: normalizeText(gallery.product_id),
+      category: normalizeCategory(gallery.category),
       image: null,
-      title: gallery.title || '',
-      description: gallery.description || '',
-      material: gallery.material || '',
-      color: gallery.color || '',
-      shape: gallery.shape || '',
-      size: gallery.size || '',
-      weight: gallery.weight || '',
+      title: normalizeText(gallery.title),
+      description: normalizeText(gallery.description),
+      material: normalizeText(gallery.material),
+      color: normalizeText(gallery.color),
+      shape: normalizeText(gallery.shape),
+      size: normalizeText(gallery.size),
+      weight: normalizeText(gallery.weight),
     });
 
     if (gallery.media?.length) {
@@ -200,18 +243,18 @@ export default function EditGallery() {
   }, [gallery, reset, baseUrl]);
 
   const hasChanges = (data, gallery) => {
-    const currentCategory = gallery.category?.toLowerCase() || '';
+    const currentCategory = normalizeCategory(gallery.category);
 
     return !(
-      data.category === currentCategory &&
-      data.color === gallery.color &&
-      data.description === gallery.description &&
-      data.material === gallery.material &&
-      data.product_id === gallery.product_id &&
-      data.shape === gallery.shape &&
-      data.size === gallery.size &&
-      data.title === gallery.title &&
-      data.weight === gallery.weight &&
+      normalizeText(data.category) === currentCategory &&
+      normalizeText(data.color) === normalizeText(gallery.color) &&
+      normalizeText(data.description) === normalizeText(gallery.description) &&
+      normalizeText(data.material) === normalizeText(gallery.material) &&
+      normalizeText(data.product_id) === normalizeText(gallery.product_id) &&
+      normalizeText(data.shape) === normalizeText(gallery.shape) &&
+      normalizeText(data.size) === normalizeText(gallery.size) &&
+      normalizeText(data.title) === normalizeText(gallery.title) &&
+      normalizeText(data.weight) === normalizeText(gallery.weight) &&
       selectedFiles.length === 0
     );
   };
@@ -325,42 +368,42 @@ export default function EditGallery() {
 
     const formData = new FormData();
 
-    const currentCategory = gallery.category?.toLowerCase() || '';
+    const currentCategory = normalizeCategory(gallery.category);
 
-    if (data.category !== currentCategory) {
-      formData.append('category', data.category);
+    if (normalizeText(data.category) !== currentCategory) {
+      formData.append('category', normalizeText(data.category));
     }
 
-    if (data.color !== gallery.color) {
-      formData.append('color', data.color);
+    if (normalizeText(data.product_id) !== normalizeText(gallery.product_id)) {
+      formData.append('product_id', normalizeText(data.product_id));
     }
 
-    if (data.description !== gallery.description) {
-      formData.append('description', data.description);
+    if (normalizeText(data.color) !== normalizeText(gallery.color)) {
+      formData.append('color', normalizeText(data.color));
     }
 
-    if (data.material !== gallery.material) {
-      formData.append('material', data.material);
+    if (normalizeText(data.description) !== normalizeText(gallery.description)) {
+      formData.append('description', normalizeText(data.description));
     }
 
-    if (data.product_id !== gallery.product_id) {
-      formData.append('product_id', data.product_id);
+    if (normalizeText(data.material) !== normalizeText(gallery.material)) {
+      formData.append('material', normalizeText(data.material));
     }
 
-    if (data.shape !== gallery.shape) {
-      formData.append('shape', data.shape);
+    if (normalizeText(data.shape) !== normalizeText(gallery.shape)) {
+      formData.append('shape', normalizeText(data.shape));
     }
 
-    if (data.size !== gallery.size) {
-      formData.append('size', data.size);
+    if (normalizeText(data.size) !== normalizeText(gallery.size)) {
+      formData.append('size', normalizeText(data.size));
     }
 
-    if (data.title !== gallery.title) {
-      formData.append('title', data.title);
+    if (normalizeText(data.title) !== normalizeText(gallery.title)) {
+      formData.append('title', normalizeText(data.title));
     }
 
-    if (data.weight !== gallery.weight) {
-      formData.append('weight', data.weight);
+    if (normalizeText(data.weight) !== normalizeText(gallery.weight)) {
+      formData.append('weight', normalizeText(data.weight));
     }
 
     selectedFiles.forEach((file) => {
@@ -449,16 +492,25 @@ export default function EditGallery() {
             >
               <Search className="text-[#167C71]" size={32} />
 
-              <motion.input
-                {...register('product_id', {
-                  required: 'Product ID is required',
-                })}
-                placeholder="PRODUCT ID"
-                whileFocus={{ scale: 1.01 }}
-                transition={{ duration: 0.2 }}
-                className="w-full h-[42px] border border-[#167C71] rounded-[4px] px-[14px] sm:px-[16px]
-                text-[16px] sm:text-[18px] text-[#0B2A26] placeholder:text-[#9E9E9E]
-                outline-none focus:ring-1 focus:ring-[#167C71] helvetica-regular"
+              <Controller
+                name="product_id"
+                control={control}
+                rules={{ required: 'Product ID is required' }}
+                render={({ field }) => (
+                  <motion.input
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                    placeholder="PRODUCT ID"
+                    whileFocus={{ scale: 1.01 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-full h-[42px] border border-[#167C71] rounded-[4px] px-[14px] sm:px-[16px]
+                    text-[16px] sm:text-[18px] text-[#0B2A26] placeholder:text-[#9E9E9E]
+                    outline-none focus:ring-1 focus:ring-[#167C71] helvetica-regular"
+                  />
+                )}
               />
             </motion.div>
 
@@ -480,7 +532,10 @@ export default function EditGallery() {
               rules={{ required: 'Category is required' }}
               render={({ field }) => (
                 <div className="w-full">
-                  <Select value={field.value || ''} onValueChange={field.onChange}>
+                  <Select
+                    value={field.value ?? ''}
+                    onValueChange={(value) => field.onChange(value)}
+                  >
                     <SelectTrigger className="w-full sailec-regular">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
