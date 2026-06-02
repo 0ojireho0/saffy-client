@@ -497,41 +497,23 @@ export default function EditGallery() {
               <Search className="text-[#167C71]" size={32} />
 
               <Controller
-                name="category"
+                name="product_id"
                 control={control}
-                rules={{ required: 'Category is required' }}
+                rules={{ required: 'Product ID is required' }}
                 render={({ field }) => (
-                  <div className="w-full">
-                    <Select
-                      key={field.value || 'empty-category'}
-                      value={field.value || ''}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="w-full sailec-regular">
-                        <SelectValue placeholder="Select a category" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectGroup>
-                          {categoriesList.map((item) => (
-                            <SelectItem
-                              value={item.value}
-                              key={item.value}
-                              className="sailec-regular"
-                            >
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-
-                    {errors.category && (
-                      <p className="text-red-500 text-sm mt-1 sailec-regular">
-                        {errors.category.message}
-                      </p>
-                    )}
-                  </div>
+                  <motion.input
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                    placeholder="PRODUCT ID"
+                    whileFocus={{ scale: 1.01 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-full h-[42px] border border-[#167C71] rounded-[4px] px-[14px] sm:px-[16px]
+                    text-[16px] sm:text-[18px] text-[#0B2A26] placeholder:text-[#9E9E9E]
+                    outline-none focus:ring-1 focus:ring-[#167C71] helvetica-regular"
+                  />
                 )}
               />
             </motion.div>
@@ -548,43 +530,44 @@ export default function EditGallery() {
             whileHover={{ y: -2 }}
             transition={{ duration: 0.2 }}
           >
-            <Controller
-              name="category"
-              control={control}
-              rules={{ required: 'Category is required' }}
-              render={({ field }) => (
-                <div className="w-full">
-                  <Select
-                    value={field.value ?? ''}
-                    onValueChange={(value) => field.onChange(value)}
-                  >
-                    <SelectTrigger className="w-full sailec-regular">
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
+          <Controller
+            name="category"
+            control={control}
+            rules={{ required: 'Category is required' }}
+            render={({ field }) => (
+              <div className="w-full">
+                <Select
+                  key={field.value || 'empty-category'}
+                  value={field.value || ''}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full sailec-regular">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
 
-                    <SelectContent>
-                      <SelectGroup>
-                        {categoriesList.map((item) => (
-                          <SelectItem
-                            value={item.value}
-                            key={item.value}
-                            className="sailec-regular"
-                          >
-                            {item.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <SelectContent>
+                    <SelectGroup>
+                      {categoriesList.map((item) => (
+                        <SelectItem
+                          value={item.value}
+                          key={item.value}
+                          className="sailec-regular"
+                        >
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
 
-                  {errors.category && (
-                    <p className="text-red-500 text-sm mt-1 sailec-regular">
-                      {errors.category.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            />
+                {errors.category && (
+                  <p className="text-red-500 text-sm mt-1 sailec-regular">
+                    {errors.category.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
           </motion.div>
         </motion.div>
 
