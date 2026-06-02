@@ -152,7 +152,7 @@ export default function EditGallery() {
   const { validateGallery, UpdateGallery } = useGalleries();
 
   const [gallery, setGallery] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [loadingBtn, setLoadingBtn] = useState(false);
 
@@ -185,16 +185,18 @@ export default function EditGallery() {
       setLoading(true);
       setError('');
 
-      const response = await validateGallery({
-        id,
-        setError,
-      });
+      try {
+        const response = await validateGallery({
+          id,
+          setError,
+        });
 
-      if (response?.content) {
-        setGallery(response.content);
+        if (response?.content) {
+          setGallery(response.content);
+        }
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchGallery();
@@ -425,7 +427,7 @@ export default function EditGallery() {
     });
   };
 
-  if (loading) return <Loading text="Loading..." />;
+  if (loading || !gallery) return <Loading text="Loading..." />;
 
   if (error) {
     return (
@@ -495,23 +497,41 @@ export default function EditGallery() {
               <Search className="text-[#167C71]" size={32} />
 
               <Controller
-                name="product_id"
+                name="category"
                 control={control}
-                rules={{ required: 'Product ID is required' }}
+                rules={{ required: 'Category is required' }}
                 render={({ field }) => (
-                  <motion.input
-                    value={field.value ?? ''}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    onBlur={field.onBlur}
-                    name={field.name}
-                    ref={field.ref}
-                    placeholder="PRODUCT ID"
-                    whileFocus={{ scale: 1.01 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full h-[42px] border border-[#167C71] rounded-[4px] px-[14px] sm:px-[16px]
-                    text-[16px] sm:text-[18px] text-[#0B2A26] placeholder:text-[#9E9E9E]
-                    outline-none focus:ring-1 focus:ring-[#167C71] helvetica-regular"
-                  />
+                  <div className="w-full">
+                    <Select
+                      key={field.value || 'empty-category'}
+                      value={field.value || ''}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full sailec-regular">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectGroup>
+                          {categoriesList.map((item) => (
+                            <SelectItem
+                              value={item.value}
+                              key={item.value}
+                              className="sailec-regular"
+                            >
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    {errors.category && (
+                      <p className="text-red-500 text-sm mt-1 sailec-regular">
+                        {errors.category.message}
+                      </p>
+                    )}
+                  </div>
                 )}
               />
             </motion.div>
