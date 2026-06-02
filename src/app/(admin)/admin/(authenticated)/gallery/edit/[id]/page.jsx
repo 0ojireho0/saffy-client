@@ -136,6 +136,8 @@ export default function EditGallery() {
     },
   });
 
+  console.log(watch('category'))
+
   const categoriesList = [
     { name: 'FASHION', value: 'fashion' },
     { name: 'GIFTS & PACKAGING', value: 'gifts' },
@@ -751,13 +753,22 @@ export default function EditGallery() {
               variants={fadeUp}
               custom={0.38}
             >
-              <motion.input
-                {...register('title', {
-                  required: 'Title is required',
-                })}
-                placeholder="Title"
-                whileFocus={{ scale: 1.01 }}
-                className="text-[48px] font-bold bg-transparent outline-none mb-2 sailec-bold"
+              <Controller
+                name="title"
+                control={control}
+                rules={{ required: 'Title is required' }}
+                render={({ field }) => (
+                  <motion.input
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                    placeholder="Title"
+                    whileFocus={{ scale: 1.01 }}
+                    className="text-[48px] font-bold bg-transparent outline-none mb-2 sailec-bold"
+                  />
+                )}
               />
 
               {errors.title && (
@@ -766,13 +777,22 @@ export default function EditGallery() {
                 </p>
               )}
 
-              <motion.textarea
-                {...register('description', {
-                  required: 'Description is required',
-                })}
-                placeholder="Description"
-                whileFocus={{ scale: 1.01 }}
-                className="bg-transparent outline-none mb-8 sailec-regular"
+              <Controller
+                name="description"
+                control={control}
+                rules={{ required: 'Description is required' }}
+                render={({ field }) => (
+                  <motion.textarea
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                    placeholder="Description"
+                    whileFocus={{ scale: 1.01 }}
+                    className="bg-transparent outline-none mb-8 sailec-regular"
+                  />
+                )}
               />
 
               {errors.description && (
