@@ -27,11 +27,11 @@ function ProductsPopupModal({
   media = [],
   title,
   description,
-  material = 'Capiz, brass wire, brass sheet',
-  color = 'Smoked, antique-plated',
-  shape = 'Nativity with 2 animals',
-  size = '16 cm L x 5 cm W x 13 cm H',
-  weight = '57 grams'
+  material,
+  color,
+  shape,
+  size,
+  weight
 }) {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
 
@@ -249,7 +249,8 @@ function ProductsPopupModal({
                   </div>
 
                   <div className="mt-6 flex flex-col gap-5 sm:mt-8 sm:gap-6 lg:mt-10">
-                    {productDetails.map((detail) => (
+                    {productDetails.filter(val => val.value != null).map((detail) => {
+                      return(
                       <div key={detail.label} className="flex items-start gap-3">
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -271,7 +272,8 @@ function ProductsPopupModal({
                           {detail.value}
                         </p>
                       </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               </div>

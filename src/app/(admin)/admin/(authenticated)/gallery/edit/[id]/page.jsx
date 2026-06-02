@@ -783,7 +783,6 @@ export default function EditGallery() {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: 'Description is required' }}
                 render={({ field }) => (
                   <motion.textarea
                     value={field.value ?? ''}
@@ -797,12 +796,6 @@ export default function EditGallery() {
                   />
                 )}
               />
-
-              {errors.description && (
-                <p className="text-red-500 text-sm mb-4 sailec-regular">
-                  {errors.description.message}
-                </p>
-              )}
 
               <motion.div
                 className="space-y-6"
@@ -887,9 +880,7 @@ function InfoInput({ icon, label, register, errors }) {
         </TooltipTrigger>
 
         <input
-          {...register(fieldName, {
-            required: `${label} is required`,
-          })}
+          {...register(fieldName)}
           placeholder={label}
           className="bg-transparent outline-none w-full sailec-regular"
         />
@@ -898,12 +889,6 @@ function InfoInput({ icon, label, register, errors }) {
       <TooltipContent side="bottom">
         <p className="sailec-regular">{label}</p>
       </TooltipContent>
-
-      {errors[fieldName] && (
-        <p className="text-red-500 text-sm mt-1 ml-[54px] sailec-regular">
-          {errors[fieldName].message}
-        </p>
-      )}
     </Tooltip>
   );
 }
