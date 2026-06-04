@@ -178,14 +178,21 @@
 }
 
 @layer base {
+  html {
+    @apply font-sans;
+    cursor: url("/cursors/bird10.png") 2 14, auto !important;
+  }
   * {
     @apply border-border outline-ring/50;
   }
+  body,
+  body *,
+  body *::before,
+  body *::after {
+    cursor: url("/cursors/bird10.png") 2 14, auto !important;
+  }
   body {
     @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
   }
 }
 
