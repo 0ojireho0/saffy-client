@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // Images
-import LoginImage from "@/assets/images/about/our-mission.png"
+import heroImg from "@/assets/images/hero-img.png"
 import upperleft from "@/assets/images/admin/upperleft.png"
 import upperright from "@/assets/images/admin/upperright.png"
 import lowerleft from "@/assets/images/admin/lowerleft.png"
@@ -58,7 +58,7 @@ function Login() {
       {/* LEFT SIDE */}
       <div className='relative hidden lg:block lg:basis-3/5 overflow-hidden'>
         <Image
-          src={LoginImage}
+          src={heroImg}
           alt='Saffy'
           fill
           className='object-cover'
