@@ -13,6 +13,7 @@ import {
   Weight,
   ChevronLeft,
   ChevronRight,
+  Tag
 } from 'lucide-react'
 
 import {
@@ -31,8 +32,11 @@ function ProductsPopupModal({
   color,
   shape,
   size,
-  weight
+  weight,
+  product_id
 }) {
+
+  console.log(description)
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
 
   useEffect(() => {
@@ -89,6 +93,11 @@ function ProductsPopupModal({
   }
 
   const productDetails = [
+    {
+      icon: <Tag size={26} className='text-[#227369] sm:size-[28px]'/>,
+      label: 'Product Code',
+      value: product_id
+    },
     {
       icon: <BrickWall size={26} className="text-[#227369] sm:size-[28px]" />,
       label: 'Material',

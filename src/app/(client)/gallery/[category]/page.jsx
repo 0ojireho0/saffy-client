@@ -232,6 +232,7 @@ function ProductCard({ product }) {
     shape: '',
     size: '',
     weight: '',
+    product_id: ''
   })
 
   const [showProductModal, setShowProductModal] = useState(false)
@@ -241,13 +242,14 @@ function ProductCard({ product }) {
 
     setGetItemDesc({
       media: productMedia,
-      title: product?.title || '',
-      description: product?.description || '',
-      material: product?.material || '',
-      color: product?.color || '',
-      shape: product?.shape || '',
-      size: product?.size || '',
-      weight: product?.weight || '',
+      title: product.title || null,
+      description: product.description || null,
+      material: product.material || null,
+      color: product.color || null,
+      shape: product.shape || null,
+      size: product.size || null,
+      weight: product.weight || null,
+      product_id: product.product_id || null
     })
   }
 
@@ -306,6 +308,7 @@ function ProductCard({ product }) {
         shape={getItemDesc.shape}
         size={getItemDesc.size}
         weight={getItemDesc.weight}
+        product_id={getItemDesc.product_id}
       />
     </>
   )

@@ -35,6 +35,7 @@ function FeaturedProducts() {
     shape: '',
     size: '',
     weight: '',
+    product_id: ''
   })
 
   const featuredProductsList = [
@@ -134,13 +135,14 @@ function FeaturedProducts() {
 
     setGetItemDesc({
       media: productMedia,
-      title: item.title,
-      description: item.description || item.desc || '',
-      material: item.material || '',
-      color: item.color || '',
-      shape: item.shape || '',
-      size: item.size || '',
-      weight: item.weight || '',
+      title: item.title || null,
+      description: item.description || null,
+      material: item.material || null,
+      color: item.color || null,
+      shape: item.shape || null,
+      size: item.size || null,
+      weight: item.weight || null,
+      product_id: item.product_id || null
     })
   }
 
@@ -275,6 +277,7 @@ function FeaturedProducts() {
         shape={getItemDesc.shape}
         size={getItemDesc.size}
         weight={getItemDesc.weight}
+        product_id={getItemDesc.product_id}
       />
     </>
   )
