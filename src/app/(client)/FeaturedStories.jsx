@@ -100,7 +100,7 @@ export default function FeaturedStories(){
                 <motion.article
                     key={item.id}
                     variants={fadeUp}
-                    className="group relative isolate overflow-hidden bg-slate-950 cursor-pointer min-h-[420px] h-[65vh] sm:h-[60vh] lg:h-[70vh] xl:h-[85vh]"
+                    className="group relative isolate overflow-hidden cursor-pointer min-h-[420px] h-[65vh] sm:h-[60vh] lg:h-[70vh] xl:h-[85vh]"
                     onClick={() => handleShowStory(item)}
                 >
                     <Image
