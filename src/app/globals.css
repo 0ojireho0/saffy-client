@@ -180,15 +180,14 @@
 @layer base {
   html {
     @apply font-sans;
-    cursor: url("/cursors/bird15.png") 2 14, auto !important;
   }
   * {
     @apply border-border outline-ring/50;
   }
-  body,
-  body *,
-  body *::before,
-  body *::after {
+  .bird-cursor,
+  .bird-cursor *,
+  .bird-cursor *::before,
+  .bird-cursor *::after {
     cursor: url("/cursors/bird15.png") 2 14, auto !important;
   }
   body {
@@ -203,3 +202,4 @@
 .swal2-cancel {
   font-family: sailec-regular, sans-serif !important;
 }
+
