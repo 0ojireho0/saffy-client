@@ -174,9 +174,20 @@ export default function EditGallery() {
   const fileInputRef = useRef(null);
 
   const [previews, setPreviews] = useState([]);
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [removedMedia, setRemovedMedia] = useState([]);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [thumbnailIndex, setThumbnailIndex] = useState(0);
+  const [originalThumbnailKey, setOriginalThumbnailKey] = useState('');
+
+  const getPreviewKey = (preview) => {
+    if (!preview) return '';
+
+    if (preview.existing) {
+      return `existing:${preview.id ?? preview.mediaPath}`;
+    }
+
+    return `new:${preview.url}`;
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -220,6 +231,8 @@ export default function EditGallery() {
 
     if (gallery.media?.length) {
       const existingPreviews = gallery.media.map((media) => ({
+        id: media.id,
+        mediaPath: media.media_path,
         url: media.media_url?.startsWith('/storage')
           ? `${baseUrl}${media.media_url}`
           : media.media_url || `${baseUrl}/storage/${media.media_path}`,
@@ -228,26 +241,39 @@ export default function EditGallery() {
       }));
 
       setPreviews(existingPreviews);
+      setRemovedMedia([]);
 
       const thumbIndex = gallery.media.findIndex((media) => media.is_thumbnail);
-      setThumbnailIndex(thumbIndex >= 0 ? thumbIndex : 0);
+      const safeThumbIndex = thumbIndex >= 0 ? thumbIndex : 0;
+
+      setThumbnailIndex(safeThumbIndex);
+      setOriginalThumbnailKey(getPreviewKey(existingPreviews[safeThumbIndex]));
       setCurrentMediaIndex(0);
     } else if (gallery.img_path) {
-      setPreviews([
-        {
-          url: `${baseUrl}/storage/${gallery.img_path}`,
-          type: 'image',
-          existing: true,
-        },
-      ]);
+      const fallbackPreview = {
+        id: null,
+        mediaPath: gallery.img_path,
+        url: `${baseUrl}/storage/${gallery.img_path}`,
+        type: 'image',
+        existing: true,
+      };
 
+      setPreviews([fallbackPreview]);
+      setRemovedMedia([]);
       setThumbnailIndex(0);
+      setOriginalThumbnailKey(getPreviewKey(fallbackPreview));
       setCurrentMediaIndex(0);
     }
   }, [gallery, reset, baseUrl]);
 
   const hasChanges = (data, gallery) => {
     const currentCategory = normalizeCategory(gallery.category);
+    const hasNewMedia = previews.some((preview) => !preview.existing);
+    const hasRemovedMedia = removedMedia.length > 0;
+
+    const currentThumbnailKey = getPreviewKey(previews[thumbnailIndex]);
+    const hasThumbnailChanged =
+      currentThumbnailKey && currentThumbnailKey !== originalThumbnailKey;
 
     return !(
       normalizeText(data.category) === currentCategory &&
@@ -259,7 +285,9 @@ export default function EditGallery() {
       normalizeText(data.size) === normalizeText(gallery.size) &&
       normalizeText(data.title) === normalizeText(gallery.title) &&
       normalizeText(data.weight) === normalizeText(gallery.weight) &&
-      selectedFiles.length === 0
+      !hasNewMedia &&
+      !hasRemovedMedia &&
+      !hasThumbnailChanged
     );
   };
 
@@ -268,7 +296,6 @@ export default function EditGallery() {
 
     if (files.length === 0) return;
 
-    const totalSize = files.reduce((sum, file) => sum + file.size, 0);
     const invalidFile = files.find((file) => !allowedTypes.includes(file.type));
 
     if (invalidFile) {
@@ -282,7 +309,13 @@ export default function EditGallery() {
       return;
     }
 
-    if (totalSize > MAX_TOTAL_SIZE) {
+    const currentSelectedSize = previews
+      .filter((preview) => !preview.existing && preview.file)
+      .reduce((sum, preview) => sum + preview.file.size, 0);
+
+    const newFilesSize = files.reduce((sum, file) => sum + file.size, 0);
+
+    if (currentSelectedSize + newFilesSize > MAX_TOTAL_SIZE) {
       Swal.fire({
         title: 'Files too large',
         text: 'Maximum total file size is 50MB.',
@@ -297,18 +330,18 @@ export default function EditGallery() {
       url: URL.createObjectURL(file),
       type: file.type.startsWith('video/') ? 'video' : 'image',
       existing: false,
+      file,
     }));
 
-    previews.forEach((preview) => {
-      if (preview.url?.startsWith('blob:')) {
-        URL.revokeObjectURL(preview.url);
-      }
+    setPreviews((prev) => {
+      const firstNewIndex = prev.length;
+      setCurrentMediaIndex(firstNewIndex);
+
+      return [...prev, ...nextPreviews];
     });
 
-    setSelectedFiles(files);
-    setPreviews(nextPreviews);
-    setCurrentMediaIndex(0);
-    setThumbnailIndex(0);
+    // Allows selecting the same file again if removed
+    event.target.value = '';
   };
 
   const handleDeletePreview = (e) => {
@@ -317,49 +350,49 @@ export default function EditGallery() {
 
     const currentPreview = previews[currentMediaIndex];
 
-    if (currentPreview?.existing) {
-      Swal.fire({
-        title: 'Existing media',
-        text: 'To remove existing uploaded media, upload a new media set. This edit form replaces all media when new files are selected.',
-        icon: 'info',
-      });
-      return;
-    }
+    if (!currentPreview) return;
 
     if (currentPreview?.url?.startsWith('blob:')) {
       URL.revokeObjectURL(currentPreview.url);
     }
 
-    const updatedFiles = selectedFiles.filter((_, index) => index !== currentMediaIndex);
-    const updatedPreviews = previews.filter((_, index) => index !== currentMediaIndex);
+    if (currentPreview.existing) {
+      setRemovedMedia((prev) => [
+        ...prev,
+        {
+          id: currentPreview.id,
+          path: currentPreview.mediaPath,
+        },
+      ]);
+    }
 
-    setSelectedFiles(updatedFiles);
+    const updatedPreviews = previews.filter(
+      (_, index) => index !== currentMediaIndex
+    );
+
     setPreviews(updatedPreviews);
-
-    const dataTransfer = new DataTransfer();
-
-    updatedFiles.forEach((file) => {
-      dataTransfer.items.add(file);
-    });
-
-    if (fileInputRef.current) {
-      fileInputRef.current.files = dataTransfer.files;
-    }
-
-    if (thumbnailIndex === currentMediaIndex) {
-      setThumbnailIndex(0);
-    } else if (thumbnailIndex > currentMediaIndex) {
-      setThumbnailIndex((prev) => prev - 1);
-    }
 
     if (updatedPreviews.length === 0) {
       setCurrentMediaIndex(0);
       setThumbnailIndex(0);
-    } else if (currentMediaIndex >= updatedPreviews.length) {
+      return;
+    }
+
+    if (thumbnailIndex === currentMediaIndex) {
+      const firstImageIndex = updatedPreviews.findIndex(
+        (preview) => preview.type !== 'video'
+      );
+
+      setThumbnailIndex(firstImageIndex >= 0 ? firstImageIndex : 0);
+    } else if (thumbnailIndex > currentMediaIndex) {
+      setThumbnailIndex((prev) => prev - 1);
+    }
+
+    if (currentMediaIndex >= updatedPreviews.length) {
       setCurrentMediaIndex(updatedPreviews.length - 1);
     }
   };
-
+  
   const onSubmit = async (data) => {
     if (!hasChanges(data, gallery)) {
       Swal.fire({
@@ -410,12 +443,40 @@ export default function EditGallery() {
       formData.append('weight', normalizeText(data.weight));
     }
 
-    selectedFiles.forEach((file) => {
-      formData.append('media[]', file);
+    const newMediaPreviews = previews.filter(
+      (preview) => !preview.existing && preview.file
+    );
+
+    newMediaPreviews.forEach((preview) => {
+      formData.append('media[]', preview.file);
     });
 
-    if (selectedFiles.length > 0) {
-      formData.append('thumbnail_index', thumbnailIndex);
+    removedMedia.forEach((media) => {
+      if (media.id) {
+        formData.append('removed_media_ids[]', media.id);
+      } else if (media.path) {
+        formData.append('removed_media_paths[]', media.path);
+      }
+    });
+
+    const thumbnailPreview = previews[thumbnailIndex];
+
+    if (thumbnailPreview) {
+      if (thumbnailPreview.existing) {
+        if (thumbnailPreview.id) {
+          formData.append('thumbnail_existing_id', thumbnailPreview.id);
+        } else if (thumbnailPreview.mediaPath) {
+          formData.append('thumbnail_existing_path', thumbnailPreview.mediaPath);
+        }
+      } else {
+        const newThumbnailIndex = newMediaPreviews.findIndex(
+          (preview) => preview.url === thumbnailPreview.url
+        );
+
+        if (newThumbnailIndex >= 0) {
+          formData.append('thumbnail_index', newThumbnailIndex);
+        }
+      }
     }
 
     setLoadingBtn(true);
@@ -640,17 +701,15 @@ export default function EditGallery() {
                       </Tooltip>
                     )}
 
-                    {!previews[currentMediaIndex]?.existing && (
-                      <motion.button
-                        type="button"
-                        whileHover={{ y: -2, scale: 1.08 }}
-                        whileTap={{ scale: 0.94 }}
-                        onClick={handleDeletePreview}
-                        className="absolute top-4 right-4 bg-white/80 rounded-full p-2 shadow-md z-10"
-                      >
-                        <X size={24} className="text-[#0B2A26]" />
-                      </motion.button>
-                    )}
+                    <motion.button
+                      type="button"
+                      whileHover={{ y: -2, scale: 1.08 }}
+                      whileTap={{ scale: 0.94 }}
+                      onClick={handleDeletePreview}
+                      className="absolute top-4 right-4 bg-white/80 rounded-full p-2 shadow-md z-10"
+                    >
+                      <X size={24} className="text-[#0B2A26]" />
+                    </motion.button>
 
                     {previews.length > 1 && (
                       <>
@@ -705,7 +764,7 @@ export default function EditGallery() {
                       whileTap={{ scale: 0.96 }}
                       className="absolute bottom-4 right-4 bg-white/80 rounded-full px-4 py-2 shadow-md cursor-pointer text-[#0B2A26] text-sm sailec-regular z-10"
                     >
-                      Replace Media
+                      Add Media
                     </motion.label>
                   </>
                 ) : (
