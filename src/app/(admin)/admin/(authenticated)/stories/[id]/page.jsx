@@ -162,30 +162,30 @@ export default function StoryPage() {
                 </motion.section>
 
                 <motion.section
-                    className="mx-auto mt-8 max-w-full sm:mt-10 lg:mt-12"
+                    className="mx-auto mt-8 w-full max-w-6xl sm:mt-10 lg:mt-12"
                     variants={fadeUp}
                     custom={0.2}
                 >
-                    <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
+                    <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
                         <img
                             src={getImageUrl(story?.publication_image_path)}
                             alt={story?.title || 'Story image'}
-                            className="h-[220px] w-full object-cover sm:h-[360px] md:h-[460px] lg:h-[560px]"
+                            className="h-full w-full object-cover"
                         />
                     </div>
                 </motion.section>
 
                 {story?.publication_video_path && (
                     <motion.section
-                        className="mx-auto mt-8 max-w-6xl sm:mt-10 lg:mt-12"
+                        className="mx-auto mt-8 w-full max-w-6xl sm:mt-10 lg:mt-12"
                         variants={fadeUp}
                         custom={0.25}
                     >
-                        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
+                        <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 sm:rounded-[28px]">
                             <video
                                 src={getVideoUrl(story.publication_video_path)}
                                 controls
-                                className="h-auto w-full"
+                                className="h-full w-full object-cover"
                             />
                         </div>
                     </motion.section>
