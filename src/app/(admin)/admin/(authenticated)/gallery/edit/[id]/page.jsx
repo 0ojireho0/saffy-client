@@ -136,7 +136,7 @@ export default function EditGallery() {
     },
   });
 
-  console.log(watch('category'))
+  // console.log(watch('category'))
 
   const categoriesList = [
     { name: 'FASHION', value: 'fashion' },

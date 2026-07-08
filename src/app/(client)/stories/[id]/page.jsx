@@ -71,7 +71,7 @@ export default function StoryPage() {
     }
 
     const getImageUrl = path => {
-        console.log(path)
+        // console.log(path)
         if (!path) return '/images/placeholder-image.png'
         return `${isProd ? process.env.NEXT_PUBLIC_DEPLOYED_BACKEND_API : process.env.NEXT_PUBLIC_BACKEND_API}/storage/${path}`
     }

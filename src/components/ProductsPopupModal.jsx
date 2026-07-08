@@ -36,7 +36,7 @@ function ProductsPopupModal({
   product_id
 }) {
 
-  console.log(description)
+  // console.log(description)
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
 
   useEffect(() => {
