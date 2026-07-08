@@ -18,9 +18,31 @@ export default function useStories() {
             }
     )
 
+    const csrf = () => axios.get('/sanctum/csrf-cookie')
+
+    const validateStory = async ({ id, setError }) => {
+        try {
+            await csrf()
+
+            const res = await axios.get('/api/validate-story', {
+                params: { id }
+            })
+
+            return res.data
+        } catch (err) {
+            if (err?.response?.status === 404) {
+                setError('The story you are trying to access does not exist.')
+            } else {
+                setError('Server error. Please try again later.')
+            }
+            return null
+        }
+    }
+
     return{
         story, 
-        isLoading
+        isLoading,
+        validateStory
     }
 
 

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, CalendarDays, BookOpen, PenLine } from 'lucide-react'
 import { isProd } from '@/lib/axios'
 
-import useStories from '@/hooks/Admin/useStories'
+import useStories from '@/hooks/Client/useStories'
 import Error from '@/components/Error'
 import Loading from '@/components/Loading'
 
